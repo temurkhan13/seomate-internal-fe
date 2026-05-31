@@ -1,0 +1,54 @@
+# Environment / credentials
+.env
+.env.local
+.env.*.local
+credentials/
+*.pem
+*.key
+
+# (Python rules removed for seomate-fe; this is a Next.js project. The
+# original monorepo's `/lib/` rule was scoped to the auditor's Python build
+# dir but accidentally matched seomate-fe's TypeScript `lib/` directory after
+# the split, excluding `lib/api.ts` and `lib/format.ts` from the initial push.
+# Python patterns now live only in the seomate-ai sibling repo where they
+# belong.)
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Build artefacts
+dist/
+build/
+
+# Data and logs (never committed)
+data/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.history/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Captured raw responses (debugging artefacts, never committed)
+auditor/data/raw_responses/
+
+# Docker
+.docker/
+
+# Audit logs
+auditor/data/logs/
