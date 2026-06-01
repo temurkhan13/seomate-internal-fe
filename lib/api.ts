@@ -76,6 +76,7 @@ export type AuditDetail = AuditSummary & {
 export type CaptureSummary = {
   capture_id: string;
   variable_id: string;
+  variable_name: string;
   pillar: string;
   captured_at: string;
   subject_type: string;
