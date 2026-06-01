@@ -47,11 +47,15 @@ export default async function AuditsPage() {
 
       {audits.length === 0 && !error && (
         <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-10 text-center text-sm text-zinc-500">
-          No audits yet. Run{" "}
+          No audits yet. A Claude session runs{" "}
           <code className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs">
-            seomate audit --config=configs/pixelette.yml
+            seomate gather --domain &lt;site&gt;
+          </code>
+          , evaluates each variable, then{" "}
+          <code className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs">
+            seomate ingest
           </code>{" "}
-          to create one.
+          to land it here. See docs/agent-audit-runbook.md.
         </div>
       )}
 
