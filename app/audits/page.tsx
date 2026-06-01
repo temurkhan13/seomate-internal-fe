@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HowItWorks } from "@/app/components/HowItWorks";
 import {
   ApiError,
   listAudits,
@@ -27,6 +28,7 @@ export default async function AuditsPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <HowItWorks />
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Audits</h1>
