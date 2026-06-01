@@ -347,26 +347,26 @@ function PillarRow({
                 href={`/audits/${auditId}/captures/${c.variable_id}`}
                 className="flex items-center gap-2 rounded border border-zinc-200 bg-white px-2.5 py-1.5 text-xs hover:border-zinc-300 hover:bg-zinc-50"
               >
-                <span className="font-mono text-zinc-500">
+                <span className="shrink-0 font-mono text-zinc-500">
                   {c.variable_id}
                 </span>
+                {c.variable_name && (
+                  <span className="truncate font-medium text-zinc-800" title={c.variable_name}>
+                    {c.variable_name}
+                  </span>
+                )}
                 <span
-                  className={`inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium ${captureStatusClasses(c.status)}`}
+                  className={`ml-auto inline-flex shrink-0 items-center rounded px-1.5 py-0.5 text-[10px] font-medium ${captureStatusClasses(c.status)}`}
                 >
                   {c.status}
                 </span>
                 <span
-                  className={`inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium ${evidenceWeightClasses(c.evidence_weight)}`}
+                  className={`inline-flex shrink-0 items-center rounded px-1.5 py-0.5 text-[10px] font-medium ${evidenceWeightClasses(c.evidence_weight)}`}
                 >
                   {c.evidence_weight}
                 </span>
-                {c.variable_name && (
-                  <span className="truncate text-zinc-700" title={c.variable_name}>
-                    {c.variable_name}
-                  </span>
-                )}
                 {c.rules_total > 0 && (
-                  <span className="ml-auto shrink-0 font-mono text-[10px] text-zinc-500">
+                  <span className="shrink-0 font-mono text-[10px] text-zinc-500">
                     {c.rules_passed}/{c.rules_total} rules
                   </span>
                 )}
