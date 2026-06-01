@@ -360,8 +360,13 @@ function PillarRow({
                 >
                   {c.evidence_weight}
                 </span>
+                {c.variable_name && (
+                  <span className="truncate text-zinc-700" title={c.variable_name}>
+                    {c.variable_name}
+                  </span>
+                )}
                 {c.rules_total > 0 && (
-                  <span className="ml-auto font-mono text-[10px] text-zinc-500">
+                  <span className="ml-auto shrink-0 font-mono text-[10px] text-zinc-500">
                     {c.rules_passed}/{c.rules_total} rules
                   </span>
                 )}
