@@ -55,6 +55,7 @@ export type AuditSummary = {
   variables_partial: number;
   variables_errored: number;
   variables_unmeasurable: number;
+  variables_deferred: number;
   anomaly_count: number;
   consistency_violation_count: number;
 };

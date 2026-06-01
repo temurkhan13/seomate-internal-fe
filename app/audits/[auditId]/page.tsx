@@ -96,10 +96,11 @@ export default async function AuditDetailPage({
         />
       </dl>
 
-      {/* Outcome counts */}
+      {/* Outcome counts. Unmeasurable is split into genuine vs deferred-by-choice
+          (e.g. a paid source not activated) so the headline isn't misread. */}
       <div className="rounded-lg border border-zinc-200 bg-white p-5">
         <h2 className="text-sm font-medium text-zinc-700">Outcomes</h2>
-        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-6">
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
           <OutcomeCount
             label="Attempted"
             count={audit.variables_attempted}
@@ -127,8 +128,13 @@ export default async function AuditDetailPage({
           />
           <OutcomeCount
             label="Unmeasurable"
-            count={audit.variables_unmeasurable}
+            count={Math.max(0, audit.variables_unmeasurable - (audit.variables_deferred ?? 0))}
             classes="bg-zinc-100 text-zinc-700"
+          />
+          <OutcomeCount
+            label="Deferred"
+            count={audit.variables_deferred ?? 0}
+            classes="bg-sky-50 text-sky-900"
           />
         </div>
       </div>
