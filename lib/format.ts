@@ -32,6 +32,9 @@ export function formatGbp(value: string | number | null): string {
 export function formatDuration(startIso: string, endIso: string | null): string {
   if (!endIso) return "—";
   const ms = new Date(endIso).getTime() - new Date(startIso).getTime();
+  // Defense in depth: a negative duration (clock skew / inverted timestamps)
+  // should never render as "-128 ms". Show a floor instead.
+  if (ms < 0) return "< 1 s";
   if (ms < 1000) return `${ms} ms`;
   if (ms < 60_000) return `${(ms / 1000).toFixed(2)} s`;
   return `${(ms / 60_000).toFixed(2)} min`;

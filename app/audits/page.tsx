@@ -125,12 +125,17 @@ export default async function AuditsPage() {
 }
 
 function Outcomes({ audit }: { audit: AuditSummary }) {
+  // Split unmeasurable into genuine vs deferred-by-choice (e.g. a paid source
+  // not activated) so the headline count isn't misread as "the tool failed".
+  const deferred = audit.variables_deferred ?? 0;
+  const genuineUnmeasurable = Math.max(0, audit.variables_unmeasurable - deferred);
   const items = [
     { label: "passed", count: audit.variables_passed, classes: "text-emerald-700" },
     { label: "failed", count: audit.variables_failed, classes: "text-rose-700" },
     { label: "partial", count: audit.variables_partial, classes: "text-amber-700" },
     { label: "error", count: audit.variables_errored, classes: "text-red-800" },
-    { label: "unmeasurable", count: audit.variables_unmeasurable, classes: "text-zinc-500" },
+    { label: "unmeasurable", count: genuineUnmeasurable, classes: "text-zinc-500" },
+    { label: "deferred", count: deferred, classes: "text-sky-600" },
   ];
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">

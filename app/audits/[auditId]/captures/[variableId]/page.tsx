@@ -141,7 +141,7 @@ export default async function CaptureDetailPage({
                       </div>
                     )}
                     {Object.keys(rule.evidence ?? {}).length > 0 && (
-                      <details className="mt-2">
+                      <details className="mt-2" open={!rule.passed}>
                         <summary className="cursor-pointer text-xs text-zinc-500 hover:text-zinc-700">
                           Evidence
                         </summary>
