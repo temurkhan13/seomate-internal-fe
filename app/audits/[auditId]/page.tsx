@@ -100,7 +100,7 @@ export default async function AuditDetailPage({
           (e.g. a paid source not activated) so the headline isn't misread. */}
       <div className="rounded-lg border border-zinc-200 bg-white p-5">
         <h2 className="text-sm font-medium text-zinc-700">Outcomes</h2>
-        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
           <OutcomeCount
             label="Attempted"
             count={audit.variables_attempted}
@@ -135,6 +135,11 @@ export default async function AuditDetailPage({
             label="Deferred"
             count={audit.variables_deferred ?? 0}
             classes="bg-sky-50 text-sky-900"
+          />
+          <OutcomeCount
+            label="Not applicable"
+            count={audit.variables_not_applicable ?? 0}
+            classes="bg-indigo-50 text-indigo-900"
           />
         </div>
       </div>

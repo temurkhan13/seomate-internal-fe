@@ -136,6 +136,7 @@ function Outcomes({ audit }: { audit: AuditSummary }) {
     { label: "error", count: audit.variables_errored, classes: "text-red-800" },
     { label: "unmeasurable", count: genuineUnmeasurable, classes: "text-zinc-500" },
     { label: "deferred", count: deferred, classes: "text-sky-600" },
+    { label: "n/a", count: audit.variables_not_applicable ?? 0, classes: "text-indigo-600" },
   ];
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
