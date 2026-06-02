@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Nav } from "@/app/components/Nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,21 +32,18 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900">
         <header className="border-b border-zinc-200 bg-white">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-            <Link
-              href="/audits"
-              className="font-semibold tracking-tight text-zinc-900"
-            >
-              SEOMATE
-            </Link>
-            <nav className="flex items-center gap-5 text-sm text-zinc-600">
-              <Link href="/audits" className="hover:text-zinc-900">
-                Audits
+            <div className="flex items-center gap-3">
+              <Link
+                href="/audits"
+                className="font-semibold tracking-tight text-zinc-900"
+              >
+                SEOMATE
               </Link>
-              <span className="text-zinc-300">|</span>
-              <span className="font-mono text-xs text-zinc-400">
-                H1 — Site Auditor
+              <span className="hidden font-mono text-[10px] uppercase tracking-wide text-zinc-400 sm:inline">
+                SEO / GEO platform
               </span>
-            </nav>
+            </div>
+            <Nav />
           </div>
         </header>
         <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-8">
