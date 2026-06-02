@@ -36,9 +36,17 @@ export default async function AuditsPage() {
             Captures persisted by the SEOMATE auditor, most recent first.
           </p>
         </div>
-        <span className="font-mono text-xs text-zinc-400">
-          {audits.length} {audits.length === 1 ? "audit" : "audits"}
-        </span>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/competitive"
+            className="text-sm text-zinc-600 hover:text-zinc-900 hover:underline"
+          >
+            Competitive analysis →
+          </Link>
+          <span className="font-mono text-xs text-zinc-400">
+            {audits.length} {audits.length === 1 ? "audit" : "audits"}
+          </span>
+        </div>
       </div>
 
       {error && (

@@ -195,6 +195,50 @@ export type FixPlan = {
   work_orders: WorkOrder[];
 };
 
+// ─── Competitive analysis (the COMPETE layer) , matches seomate.competitive ──
+
+export type DomainVisibility = {
+  domain: string;
+  is_target: boolean;
+  organic_keywords: number;
+  organic_traffic: number;
+  domain_rank: number | null;
+};
+
+export type KeywordGap = {
+  keyword: string;
+  volume: number;
+  their_position: number | null;
+  their_url: string | null;
+};
+
+export type LosingKeyword = {
+  keyword: string;
+  volume: number;
+  our_position: number | null;
+  their_position: number | null;
+};
+
+export type CompetitorComparison = {
+  domain: string;
+  gap_count: number;
+  shared_count: number;
+  we_win_shared: number;
+  they_win_shared: number;
+  top_keyword_gaps: KeywordGap[];
+  top_losing_keywords: LosingKeyword[];
+};
+
+export type CompetitiveReport = {
+  target: string;
+  competitors: string[];
+  auto_discovered: boolean;
+  location_code: number;
+  language_code: string;
+  visibility: DomainVisibility[];
+  per_competitor: CompetitorComparison[];
+};
+
 // ─── Fetch helpers ──────────────────────────────────────────────────────────
 
 /**
@@ -284,6 +328,17 @@ export async function getVariable(variableId: string): Promise<Variable> {
 
 export async function getAuditPlan(auditId: string): Promise<FixPlan> {
   return api<FixPlan>(`/api/audits/${auditId}/plan`);
+}
+
+export async function getCompetitive(
+  target: string,
+  competitors?: string,
+  keywordLimit = 100,
+): Promise<CompetitiveReport> {
+  const q = new URLSearchParams({ target });
+  if (competitors) q.set("competitors", competitors);
+  q.set("keyword_limit", String(keywordLimit));
+  return api<CompetitiveReport>(`/api/competitive?${q.toString()}`);
 }
 
 export async function getTaxonomyVersion(): Promise<{
