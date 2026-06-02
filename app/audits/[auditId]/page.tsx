@@ -144,6 +144,24 @@ export default async function AuditDetailPage({
         </div>
       </div>
 
+      {/* Fix plan CTA — the bridge from diagnosis to remediation */}
+      <Link
+        href={`/audits/${audit.audit_id}/plan`}
+        className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 p-5 hover:border-emerald-300 hover:bg-emerald-100"
+      >
+        <div>
+          <div className="text-sm font-medium text-emerald-900">
+            View fix plan →
+          </div>
+          <div className="mt-0.5 text-xs text-emerald-800">
+            How to fix every failed / partial finding, grouped by who can action it.
+          </div>
+        </div>
+        <span className="font-mono text-2xl text-emerald-900">
+          {audit.variables_failed + audit.variables_partial}
+        </span>
+      </Link>
+
       {/* Anomalies + consistency violations (reliability gates) */}
       {(audit.anomalies.length > 0 || audit.consistency_violations.length > 0) && (
         <section className="rounded-lg border border-amber-300 bg-amber-50 p-5">

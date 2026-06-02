@@ -153,6 +153,48 @@ export type Variable = {
   removed_into: string | null;
 };
 
+// ─── Remediation plan (the FIX layer) , matches seomate.agent.plan_fixes ─────
+
+export type FixClass = "session" | "human" | "budget" | "owner" | "offsite";
+
+export type RemediationSpec = {
+  variable_id: string;
+  fix_class: FixClass;
+  fix_type: string;
+  target: string;
+  concrete_change: string;
+  required_inputs: string[];
+  verify: string;
+  automatable: boolean;
+  risk: string;
+  depends_on: string[];
+  effort: string;
+  notes: string;
+};
+
+export type WorkOrder = {
+  variable_id: string;
+  pillar: string;
+  diagnostic_status: string;
+  evidence: string;
+  failing_rules: string[];
+  has_authored_spec: boolean;
+  remediation: RemediationSpec;
+};
+
+export type FixPlan = {
+  audit_id: string;
+  site_domain: string;
+  audit_started_at: string | null;
+  is_latest_audit: boolean;
+  latest_audit_id: string | null;
+  actionable_findings: number;
+  by_fix_class: Record<string, number>;
+  session_automatable: string[];
+  needs_remediation_authoring: string[];
+  work_orders: WorkOrder[];
+};
+
 // ─── Fetch helpers ──────────────────────────────────────────────────────────
 
 /**
@@ -238,6 +280,10 @@ export async function getCapture(
 
 export async function getVariable(variableId: string): Promise<Variable> {
   return api<Variable>(`/api/taxonomy/variables/${variableId}`);
+}
+
+export async function getAuditPlan(auditId: string): Promise<FixPlan> {
+  return api<FixPlan>(`/api/audits/${auditId}/plan`);
 }
 
 export async function getTaxonomyVersion(): Promise<{
