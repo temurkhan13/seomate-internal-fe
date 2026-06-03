@@ -324,6 +324,30 @@ export type CompetitiveReport = {
   visibility: DomainVisibility[];
   per_competitor: CompetitorComparison[];
   opportunities: KeywordOpportunity[];
+  analysis_id?: string;
+};
+
+// The full strategy SNAPSHOT (/api/strategy/run) , the free audit half + Loop
+// diff bundled with one paid competitive run, persisted as a saved analysis so
+// it can be revisited for free, exactly like an audit.
+export type StrategyRun = SiteStrategy & {
+  competitive: CompetitiveReport;
+  analysis_id?: string;
+};
+
+// ─── Saved analyses (history for the Competitive + Strategy surfaces) ────────
+
+export type SavedAnalysisSummary = {
+  analysis_id: string;
+  kind: "competitive" | "strategy";
+  target: string;
+  created_at: string | null;
+  cost_gbp: number | null;
+};
+
+export type SavedAnalysisDetail = SavedAnalysisSummary & {
+  // Competitive rows carry a CompetitiveReport; strategy rows a StrategyRun.
+  payload: CompetitiveReport | StrategyRun;
 };
 
 // ─── Fetch helpers ──────────────────────────────────────────────────────────
@@ -435,6 +459,34 @@ export async function getCompetitive(
 export async function getSiteStrategy(target: string): Promise<SiteStrategy> {
   const q = new URLSearchParams({ target });
   return api<SiteStrategy>(`/api/strategy?${q.toString()}`);
+}
+
+// Build + persist a full strategy snapshot. PAID (runs competitive). Returns the
+// bundle with analysis_id; the snapshot then appears in the Strategy history.
+export async function getStrategyRun(
+  target: string,
+  competitors?: string,
+  keywordLimit = 100,
+): Promise<StrategyRun> {
+  const q = new URLSearchParams({ target });
+  if (competitors) q.set("competitors", competitors);
+  q.set("keyword_limit", String(keywordLimit));
+  return api<StrategyRun>(`/api/strategy/run?${q.toString()}`);
+}
+
+// History for the Competitive + Strategy surfaces (summaries, newest first).
+export async function getSavedAnalyses(
+  kind: "competitive" | "strategy",
+  target?: string,
+): Promise<SavedAnalysisSummary[]> {
+  const q = new URLSearchParams({ kind });
+  if (target) q.set("target", target);
+  return api<SavedAnalysisSummary[]>(`/api/saved?${q.toString()}`);
+}
+
+// One saved analysis with its full payload , free, no DataForSEO call.
+export async function getSavedAnalysis(id: string): Promise<SavedAnalysisDetail> {
+  return api<SavedAnalysisDetail>(`/api/saved/${id}`);
 }
 
 export async function getTaxonomyVersion(): Promise<{
