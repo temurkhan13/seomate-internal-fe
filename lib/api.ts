@@ -195,6 +195,43 @@ export type FixPlan = {
   work_orders: WorkOrder[];
 };
 
+// ─── Strategy (the STRATEGIST surface) , matches seomate.agent.build_strategy ──
+
+export type PillarHealth = {
+  pillar: string;
+  label: string;
+  passed: number;
+  failed: number;
+  partial: number;
+  health_pct: number | null;
+};
+
+export type StrategyWaveItem = {
+  variable_id: string;
+  pillar: string;
+  fix_class: string;
+  concrete_change: string;
+};
+
+export type StrategyWave = {
+  key: string;
+  title: string;
+  blurb: string;
+  count: number;
+  items: StrategyWaveItem[];
+};
+
+export type AuditStrategy = {
+  audit_id: string;
+  site_domain: string;
+  audit_started_at: string | null;
+  is_latest_audit: boolean;
+  actionable_findings: number;
+  by_fix_class: Record<string, number>;
+  positioning: PillarHealth[];
+  waves: StrategyWave[];
+};
+
 // ─── Competitive analysis (the COMPETE layer) , matches seomate.competitive ──
 
 export type DomainVisibility = {
@@ -336,6 +373,10 @@ export async function getVariable(variableId: string): Promise<Variable> {
 
 export async function getAuditPlan(auditId: string): Promise<FixPlan> {
   return api<FixPlan>(`/api/audits/${auditId}/plan`);
+}
+
+export async function getAuditStrategy(auditId: string): Promise<AuditStrategy> {
+  return api<AuditStrategy>(`/api/audits/${auditId}/strategy`);
 }
 
 export async function getCompetitive(

@@ -162,6 +162,20 @@ export default async function AuditDetailPage({
         </span>
       </Link>
 
+      {/* Strategy CTA — positioning + the fixes sequenced into waves */}
+      <Link
+        href={`/audits/${audit.audit_id}/strategy`}
+        className="flex items-center justify-between rounded-lg border border-sky-200 bg-sky-50 p-5 hover:border-sky-300 hover:bg-sky-100"
+      >
+        <div>
+          <div className="text-sm font-medium text-sky-900">View strategy →</div>
+          <div className="mt-0.5 text-xs text-sky-800">
+            Where the site stands by pillar, and the fixes sequenced into waves
+            (plus keyword targeting).
+          </div>
+        </div>
+      </Link>
+
       {/* Anomalies + consistency violations (reliability gates) */}
       {(audit.anomalies.length > 0 || audit.consistency_violations.length > 0) && (
         <section className="rounded-lg border border-amber-300 bg-amber-50 p-5">
