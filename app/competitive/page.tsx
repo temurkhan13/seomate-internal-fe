@@ -151,7 +151,7 @@ function Report({ report }: { report: CompetitiveReport }) {
               by opportunity.
             </p>
           </div>
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto"><table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-zinc-500">
                 <th className="p-3 font-medium">Keyword</th>
@@ -172,7 +172,7 @@ function Report({ report }: { report: CompetitiveReport }) {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </section>
       )}
 

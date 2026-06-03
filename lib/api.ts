@@ -242,13 +242,33 @@ export type AuditStrategy = {
   waves: StrategyWave[];
 };
 
-// The independent, domain-driven strategy surface: latest-audit strategy +
-// a live competitive run, unified. ``audit`` is null when the domain has no audit.
+export type PillarDelta = {
+  pillar: string;
+  label: string;
+  prev_pct: number | null;
+  cur_pct: number | null;
+  delta: number | null;
+};
+
+export type DiffVar = { variable_id: string; name: string; pillar: string };
+
+export type AuditDiff = {
+  has_diff: boolean;
+  current_started_at: string | null;
+  previous_started_at: string | null;
+  pillars: PillarDelta[];
+  newly_passed: DiffVar[];
+  newly_failed: DiffVar[];
+};
+
+// The domain-driven strategy surface , FREE (audit half + Loop diff). The paid
+// competitive half is fetched separately (getCompetitive) on an explicit action,
+// so opening the strategy view never silently spends DataForSEO budget.
 export type SiteStrategy = {
   target: string;
   has_audit: boolean;
   audit: AuditStrategy | null;
-  competitive: CompetitiveReport;
+  diff: AuditDiff | null;
 };
 
 // ─── Competitive analysis (the COMPETE layer) , matches seomate.competitive ──
@@ -409,14 +429,8 @@ export async function getCompetitive(
   return api<CompetitiveReport>(`/api/competitive?${q.toString()}`);
 }
 
-export async function getSiteStrategy(
-  target: string,
-  competitors?: string,
-  keywordLimit = 100,
-): Promise<SiteStrategy> {
+export async function getSiteStrategy(target: string): Promise<SiteStrategy> {
   const q = new URLSearchParams({ target });
-  if (competitors) q.set("competitors", competitors);
-  q.set("keyword_limit", String(keywordLimit));
   return api<SiteStrategy>(`/api/strategy?${q.toString()}`);
 }
 

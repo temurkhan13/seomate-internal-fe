@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import type { PillarHealth } from "@/lib/api";
 
@@ -32,24 +32,78 @@ function statusClasses(s: string): string {
     : "bg-rose-100 text-rose-800";
 }
 
+// Objective lens , which pillars to prioritise for a given goal. The deep,
+// fully objective-driven playbook is still a session's job; this is a quick focus
+// that reorders the pillars (priority ones first) so you see where to act for the
+// goal you pick.
+const OBJECTIVES: Record<string, { label: string; pillars: string[] }> = {
+  organic: { label: "Grow organic traffic", pillars: ["P1", "P4", "P0"] },
+  geo: { label: "Win AI search / GEO", pillars: ["P6", "P4", "P0"] },
+  technical: { label: "Technical health", pillars: ["P2", "P1"] },
+  local: { label: "Local visibility", pillars: ["P5", "P0"] },
+};
+
 export function Positioning({ positioning }: { positioning: PillarHealth[] }) {
   const [open, setOpen] = useState<string | null>(null);
+  const [objective, setObjective] = useState<string>("organic");
+
+  const prio = OBJECTIVES[objective].pillars;
+  const ordered = useMemo(() => {
+    const rank = (p: string) => {
+      const i = prio.indexOf(p);
+      return i === -1 ? prio.length + 1 : i;
+    };
+    return [...positioning].sort((a, b) => rank(a.pillar) - rank(b.pillar));
+  }, [positioning, prio]);
+
+  const focus = positioning
+    .filter((p) => prio.includes(p.pillar))
+    .sort((a, b) => prio.indexOf(a.pillar) - prio.indexOf(b.pillar));
+
   return (
     <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
       <div className="border-b border-zinc-100 p-5">
-        <h2 className="text-sm font-medium text-zinc-800">
-          Where the site stands
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-sm font-medium text-zinc-800">
+            Where the site stands
+          </h2>
+          <label className="flex items-center gap-2 text-xs text-zinc-500">
+            Objective
+            <select
+              value={objective}
+              onChange={(e) => setObjective(e.target.value)}
+              className="rounded border border-zinc-300 px-2 py-1 text-xs text-zinc-800"
+            >
+              {Object.entries(OBJECTIVES).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {v.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
         <p className="mt-1 text-xs text-zinc-500">
-          Pillar health from the latest audit (passed over graded). Click a
-          pillar to see why it scores that, and how each finding gets fixed.
+          Pillar health from the latest audit (passed over graded). Click a pillar
+          to see why it scores that, and how each finding gets fixed.
+        </p>
+        <p className="mt-2 rounded bg-sky-50 px-2.5 py-1.5 text-xs text-sky-900">
+          For <span className="font-medium">{OBJECTIVES[objective].label}</span>,
+          prioritise:{" "}
+          {focus.map((p, i) => (
+            <span key={p.pillar}>
+              {i > 0 ? ", " : ""}
+              {p.label} ({p.health_pct === null ? "n/a" : `${p.health_pct}%`})
+            </span>
+          ))}
+          . Those pillars are pulled to the top.
         </p>
       </div>
       <div className="divide-y divide-zinc-100">
-        {positioning.map((p) => {
+        {ordered.map((p) => {
           const isOpen = open === p.pillar;
           const n = p.findings?.length ?? 0;
           const graded = p.passed + p.failed + p.partial;
+          const isPrio = prio.includes(p.pillar);
           return (
             <div key={p.pillar}>
               <button
@@ -57,7 +111,7 @@ export function Positioning({ positioning }: { positioning: PillarHealth[] }) {
                 onClick={() => n > 0 && setOpen(isOpen ? null : p.pillar)}
                 className={`flex w-full items-center gap-4 p-4 text-left ${
                   n > 0 ? "hover:bg-zinc-50" : "cursor-default"
-                }`}
+                } ${isPrio ? "bg-sky-50/40" : ""}`}
               >
                 <span className="w-4 shrink-0 text-zinc-400">
                   {n > 0 ? (isOpen ? "▾" : "▸") : ""}

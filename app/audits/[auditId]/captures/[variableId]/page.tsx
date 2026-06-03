@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 
 import {
   ApiError,
+  getAuditPlan,
   getCapture,
   getVariable,
   type CaptureDetail,
+  type RemediationSpec,
   type Variable,
 } from "@/lib/api";
 import {
@@ -39,6 +41,18 @@ export default async function CaptureDetailPage({
     variable = await getVariable(variableId);
   } catch {
     variable = null;
+  }
+
+  // How-to-fix , best-effort: pull this variable's remediation from the audit's
+  // fix plan (present for failed/partial findings; passed captures need no fix).
+  let fix: RemediationSpec | null = null;
+  try {
+    const plan = await getAuditPlan(auditId);
+    fix =
+      plan.work_orders.find((w) => w.variable_id === variableId)?.remediation ??
+      null;
+  } catch {
+    fix = null;
   }
 
   return (
@@ -155,6 +169,36 @@ export default async function CaptureDetailPage({
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {/* How to fix , from the remediation plan */}
+      {fix && (
+        <section className="rounded-lg border border-emerald-200 bg-emerald-50">
+          <header className="border-b border-emerald-100 p-5">
+            <h2 className="text-sm font-medium text-emerald-900">How to fix</h2>
+            <p className="mt-1 text-xs text-emerald-800">
+              From the remediation plan. Who can action it:{" "}
+              <span className="font-medium">{fix.fix_class}</span>.
+            </p>
+          </header>
+          <div className="space-y-2 p-5 text-sm text-emerald-900">
+            <p>{fix.concrete_change}</p>
+            <p className="text-xs text-emerald-800">
+              <span className="font-medium">Where: </span>
+              {fix.target}
+            </p>
+            {fix.required_inputs.length > 0 && (
+              <p className="text-xs text-emerald-800">
+                <span className="font-medium">Needs: </span>
+                {fix.required_inputs.join("; ")}
+              </p>
+            )}
+            <p className="text-xs text-emerald-800">
+              <span className="font-medium">Verify: </span>
+              {fix.verify}
+            </p>
+          </div>
         </section>
       )}
 
