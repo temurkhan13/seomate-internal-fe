@@ -197,6 +197,15 @@ export type FixPlan = {
 
 // ─── Strategy (the STRATEGIST surface) , matches seomate.agent.build_strategy ──
 
+export type PillarFinding = {
+  variable_id: string;
+  name: string;
+  status: string;
+  evidence: string;
+  fix_class: string;
+  concrete_change: string;
+};
+
 export type PillarHealth = {
   pillar: string;
   label: string;
@@ -204,6 +213,7 @@ export type PillarHealth = {
   failed: number;
   partial: number;
   health_pct: number | null;
+  findings: PillarFinding[];
 };
 
 export type StrategyWaveItem = {

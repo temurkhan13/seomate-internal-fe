@@ -1,18 +1,12 @@
 import Link from "next/link";
 
+import { Positioning } from "@/app/components/Positioning";
 import { ApiError, getSiteStrategy, type SiteStrategy } from "@/lib/api";
 
 // The competitive half is a live, paid DataForSEO query , never statically cache.
 export const dynamic = "force-dynamic";
 
 type SP = { target?: string; competitors?: string };
-
-function barColor(pct: number | null): string {
-  if (pct === null) return "bg-zinc-300";
-  if (pct >= 67) return "bg-emerald-400";
-  if (pct >= 34) return "bg-amber-400";
-  return "bg-rose-400";
-}
 
 export default async function StrategyPage({
   searchParams,
@@ -95,49 +89,27 @@ function Report({ report }: { report: SiteStrategy }) {
   const c = report.competitive;
   return (
     <div className="flex flex-col gap-6">
-      {/* Positioning */}
-      <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
-        <div className="border-b border-zinc-100 p-5">
-          <h2 className="text-sm font-medium text-zinc-800">
-            Where the site stands
-          </h2>
-          <p className="mt-1 text-xs text-zinc-500">
-            {a
-              ? "Pillar health from the latest audit. The low bars are where the visibility problem is."
-              : "No audit yet for this domain."}
-          </p>
-        </div>
-        {a ? (
-          <div className="divide-y divide-zinc-100">
-            {a.positioning.map((p) => (
-              <div key={p.pillar} className="flex items-center gap-4 p-4">
-                <div className="w-48 shrink-0">
-                  <span className="font-mono text-xs text-zinc-400">
-                    {p.pillar}
-                  </span>
-                  <span className="ml-2 text-sm text-zinc-800">{p.label}</span>
-                </div>
-                <div className="h-2 flex-1 overflow-hidden rounded bg-zinc-100">
-                  <div
-                    className={`h-full ${barColor(p.health_pct)}`}
-                    style={{ width: `${p.health_pct ?? 0}%` }}
-                  />
-                </div>
-                <div className="w-12 shrink-0 text-right font-mono text-xs text-zinc-600">
-                  {p.health_pct === null ? "n/a" : `${p.health_pct}%`}
-                </div>
-              </div>
-            ))}
+      {/* Positioning , click a pillar for the why + how-to-fix drill-down */}
+      {a ? (
+        <Positioning positioning={a.positioning} />
+      ) : (
+        <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
+          <div className="border-b border-zinc-100 p-5">
+            <h2 className="text-sm font-medium text-zinc-800">
+              Where the site stands
+            </h2>
+            <p className="mt-1 text-xs text-zinc-500">
+              No audit yet for this domain.
+            </p>
           </div>
-        ) : (
           <div className="p-5 text-sm text-zinc-600">
             Run an audit to get on-site positioning and the sequenced fix plan.{" "}
             <Link href="/audits" className="text-zinc-900 underline">
               Audits →
             </Link>
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* Waves */}
       {a && a.waves.length > 0 && (
@@ -193,6 +165,18 @@ function Report({ report }: { report: SiteStrategy }) {
           )}
         </section>
       )}
+
+      {/* The competitors + keywords to take into competitive analysis */}
+      <div className="rounded-lg border border-sky-200 bg-sky-50 p-4">
+        <h2 className="text-sm font-medium text-sky-900">
+          Competitors to watch + keywords to target
+        </h2>
+        <p className="mt-0.5 text-xs text-sky-800">
+          These come from this site: who shows up for its keywords, and the
+          winnable keywords it does not yet rank for. Use them as the inputs for
+          the full competitive analysis (linked at the bottom).
+        </p>
+      </div>
 
       {/* Competitive standing */}
       <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
