@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 
 import type { PillarHealth } from "@/lib/api";
 
-function barColor(pct: number | null): string {
-  if (pct === null) return "bg-zinc-300";
+function barColor(pct: number | null, muted = false): string {
+  if (muted || pct === null) return "bg-zinc-300";
   if (pct >= 67) return "bg-emerald-400";
   if (pct >= 34) return "bg-amber-400";
   return "bg-rose-400";
@@ -103,6 +103,7 @@ export function Positioning({ positioning }: { positioning: PillarHealth[] }) {
           const isOpen = open === p.pillar;
           const n = p.findings?.length ?? 0;
           const graded = p.passed + p.failed + p.partial;
+          const mostlyUnmeasured = p.unmeasured > p.graded;
           const isPrio = prio.includes(p.pillar);
           return (
             <div key={p.pillar}>
@@ -124,15 +125,16 @@ export function Positioning({ positioning }: { positioning: PillarHealth[] }) {
                 </div>
                 <div className="h-2 flex-1 overflow-hidden rounded bg-zinc-100">
                   <div
-                    className={`h-full ${barColor(p.health_pct)}`}
+                    className={`h-full ${barColor(p.health_pct, mostlyUnmeasured)}`}
                     style={{ width: `${p.health_pct ?? 0}%` }}
                   />
                 </div>
                 <div className="w-12 shrink-0 text-right font-mono text-xs text-zinc-600">
                   {p.health_pct === null ? "n/a" : `${p.health_pct}%`}
                 </div>
-                <div className="w-28 shrink-0 text-right font-mono text-[11px] text-zinc-400">
-                  {p.passed} pass / {p.failed} fail
+                <div className="w-40 shrink-0 text-right font-mono text-[11px] text-zinc-400">
+                  {p.passed}/{p.graded} pass
+                  {p.unmeasured > 0 ? ` · ${p.unmeasured} unmeasured` : ""}
                 </div>
               </button>
               {isOpen && n > 0 && (

@@ -212,6 +212,8 @@ export type PillarHealth = {
   passed: number;
   failed: number;
   partial: number;
+  graded: number;
+  unmeasured: number;
   health_pct: number | null;
   findings: PillarFinding[];
 };
@@ -254,6 +256,7 @@ export type DiffVar = { variable_id: string; name: string; pillar: string };
 
 export type AuditDiff = {
   has_diff: boolean;
+  rerun_warning: boolean;
   current_started_at: string | null;
   previous_started_at: string | null;
   pillars: PillarDelta[];

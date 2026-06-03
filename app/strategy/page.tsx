@@ -136,8 +136,18 @@ function WhatChanged({ diff }: { diff: AuditDiff | null }) {
         </h2>
         <p className="mt-1 text-xs text-zinc-500">
           Pillar health deltas, and the variables that flipped, vs the previous
-          audit.
+          audit
+          {diff.previous_started_at
+            ? ` (${diff.previous_started_at.slice(0, 10)})`
+            : ""}
+          .
         </p>
+        {diff.rerun_warning && (
+          <p className="mt-2 rounded bg-amber-50 px-2.5 py-1.5 text-xs text-amber-900">
+            No older audit to compare against , this is a same-period re-run, so
+            treat these deltas as measurement variance, not real change.
+          </p>
+        )}
       </div>
       <div className="p-5">
         <div className="flex flex-wrap gap-2">
