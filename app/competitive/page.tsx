@@ -41,9 +41,11 @@ export default async function CompetitivePage({
         </h1>
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-zinc-600">
           Compare a site against competitors across visibility, keyword gaps, and
-          positioning. Enter your real business competitors for a meaningful
-          result , leave blank to auto-discover (keyword-overlap; weak for niche
-          sites). Each run is a live, paid DataForSEO query.
+          positioning. Leave competitors blank and the platform finds them itself:
+          the domains that recur in search results for the keywords this site
+          already ranks for, with aggregators and directories filtered out. Or
+          enter your own comma-separated list. Each run is a live, paid DataForSEO
+          query.
         </p>
       </div>
 
@@ -96,10 +98,11 @@ function Report({ report }: { report: CompetitiveReport }) {
   return (
     <div className="flex flex-col gap-6">
       {report.auto_discovered && (
-        <div className="rounded border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
-          Competitors were auto-discovered by keyword overlap. For a niche / B2B
-          site this is usually dominated by large general platforms , pass your
-          real competitors above for a useful comparison.
+        <div className="rounded border border-sky-300 bg-sky-50 p-3 text-xs text-sky-900">
+          Competitors were auto-discovered: the domains that most often rank
+          alongside this site for its own keywords, with aggregators and
+          directories filtered out. Pass your own comma-separated list above to
+          compare against specific competitors.
         </div>
       )}
 
