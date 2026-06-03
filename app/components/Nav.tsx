@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Top-level destinations. Audits is the diagnostic; Competitive is the
-// standalone you-vs-competitors tool. (Fix plans live inside each audit, so
-// they aren't a top-level nav item.)
+// Top-level destinations. Audits is the diagnostic; Strategy is the
+// domain-driven view that unifies the latest audit with competitive standing +
+// keyword opportunities; Competitive is the standalone you-vs-competitors tool.
+// (Fix plans live inside each audit, so they aren't a top-level nav item.)
 const ITEMS: { href: string; label: string }[] = [
   { href: "/audits", label: "Audits" },
+  { href: "/strategy", label: "Strategy" },
   { href: "/competitive", label: "Competitive" },
 ];
 

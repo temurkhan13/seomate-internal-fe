@@ -162,16 +162,17 @@ export default async function AuditDetailPage({
         </span>
       </Link>
 
-      {/* Strategy CTA — positioning + the fixes sequenced into waves */}
+      {/* Strategy CTA — the domain-driven strategy surface (positioning + waves
+          + live competitive standing + keyword opportunities) */}
       <Link
-        href={`/audits/${audit.audit_id}/strategy`}
+        href={`/strategy?target=${encodeURIComponent(audit.site_domain)}`}
         className="flex items-center justify-between rounded-lg border border-sky-200 bg-sky-50 p-5 hover:border-sky-300 hover:bg-sky-100"
       >
         <div>
           <div className="text-sm font-medium text-sky-900">View strategy →</div>
           <div className="mt-0.5 text-xs text-sky-800">
-            Where the site stands by pillar, and the fixes sequenced into waves
-            (plus keyword targeting).
+            Where the site stands, the fixes sequenced into waves, and the
+            keywords to go for. Runs a live competitive analysis.
           </div>
         </div>
       </Link>

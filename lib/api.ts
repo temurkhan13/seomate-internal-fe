@@ -232,6 +232,15 @@ export type AuditStrategy = {
   waves: StrategyWave[];
 };
 
+// The independent, domain-driven strategy surface: latest-audit strategy +
+// a live competitive run, unified. ``audit`` is null when the domain has no audit.
+export type SiteStrategy = {
+  target: string;
+  has_audit: boolean;
+  audit: AuditStrategy | null;
+  competitive: CompetitiveReport;
+};
+
 // ─── Competitive analysis (the COMPETE layer) , matches seomate.competitive ──
 
 export type DomainVisibility = {
@@ -388,6 +397,17 @@ export async function getCompetitive(
   if (competitors) q.set("competitors", competitors);
   q.set("keyword_limit", String(keywordLimit));
   return api<CompetitiveReport>(`/api/competitive?${q.toString()}`);
+}
+
+export async function getSiteStrategy(
+  target: string,
+  competitors?: string,
+  keywordLimit = 100,
+): Promise<SiteStrategy> {
+  const q = new URLSearchParams({ target });
+  if (competitors) q.set("competitors", competitors);
+  q.set("keyword_limit", String(keywordLimit));
+  return api<SiteStrategy>(`/api/strategy?${q.toString()}`);
 }
 
 export async function getTaxonomyVersion(): Promise<{
