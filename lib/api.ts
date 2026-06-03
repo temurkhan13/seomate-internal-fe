@@ -229,6 +229,13 @@ export type CompetitorComparison = {
   top_losing_keywords: LosingKeyword[];
 };
 
+export type KeywordOpportunity = {
+  keyword: string;
+  volume: number;
+  difficulty: number | null;
+  opportunity_score: number;
+};
+
 export type CompetitiveReport = {
   target: string;
   competitors: string[];
@@ -237,6 +244,7 @@ export type CompetitiveReport = {
   language_code: string;
   visibility: DomainVisibility[];
   per_competitor: CompetitorComparison[];
+  opportunities: KeywordOpportunity[];
 };
 
 // ─── Fetch helpers ──────────────────────────────────────────────────────────

@@ -137,6 +137,45 @@ function Report({ report }: { report: CompetitiveReport }) {
         </table>
       </section>
 
+      {report.opportunities && report.opportunities.length > 0 && (
+        <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
+          <div className="border-b border-zinc-100 p-5">
+            <h2 className="text-sm font-medium text-zinc-800">
+              Keyword opportunities
+            </h2>
+            <p className="mt-1 max-w-2xl text-xs leading-relaxed text-zinc-500">
+              Winnable keywords in this niche the site is not yet ranking for,
+              found by expanding the competitors&apos; keywords and scored by
+              search volume against ranking difficulty (lower difficulty ranks
+              higher). Relevance to your business is your call; these are sorted
+              by opportunity.
+            </p>
+          </div>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-xs text-zinc-500">
+                <th className="p-3 font-medium">Keyword</th>
+                <th className="p-3 font-medium">Volume</th>
+                <th className="p-3 font-medium">Difficulty</th>
+                <th className="p-3 font-medium">Opportunity</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100">
+              {report.opportunities.map((o) => (
+                <tr key={o.keyword}>
+                  <td className="p-3">{o.keyword}</td>
+                  <td className="p-3 font-mono">{o.volume.toLocaleString()}</td>
+                  <td className="p-3 font-mono">{o.difficulty ?? "-"}</td>
+                  <td className="p-3 font-mono">
+                    {o.opportunity_score.toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
       {report.per_competitor.map((c) => (
         <section
           key={c.domain}
