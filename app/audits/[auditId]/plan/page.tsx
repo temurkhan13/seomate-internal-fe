@@ -11,8 +11,8 @@ const FIX_CLASS_META: Record<
   { label: string; blurb: string; classes: string }
 > = {
   session: {
-    label: "Session (automatable)",
-    blurb: "A Claude session can do these end-to-end with repo / CMS access.",
+    label: "Session",
+    blurb: "A Claude session can do these end-to-end with repo / CMS access (it drafts, you approve the PR).",
     classes: "bg-emerald-50 text-emerald-900 border-emerald-200",
   },
   human: {
