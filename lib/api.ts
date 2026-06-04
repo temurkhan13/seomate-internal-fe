@@ -551,10 +551,12 @@ export async function getAuditStrategy(auditId: string): Promise<AuditStrategy> 
 export async function getCompetitive(
   target: string,
   competitors?: string,
+  focus?: string,
   keywordLimit = 100,
 ): Promise<CompetitiveReport> {
   const q = new URLSearchParams({ target });
   if (competitors) q.set("competitors", competitors);
+  if (focus) q.set("focus", focus);
   q.set("keyword_limit", String(keywordLimit));
   return api<CompetitiveReport>(`/api/competitive?${q.toString()}`);
 }
@@ -569,10 +571,12 @@ export async function getSiteStrategy(target: string): Promise<SiteStrategy> {
 export async function getStrategyRun(
   target: string,
   competitors?: string,
+  focus?: string,
   keywordLimit = 100,
 ): Promise<StrategyRun> {
   const q = new URLSearchParams({ target });
   if (competitors) q.set("competitors", competitors);
+  if (focus) q.set("focus", focus);
   q.set("keyword_limit", String(keywordLimit));
   return api<StrategyRun>(`/api/strategy/run?${q.toString()}`);
 }

@@ -18,7 +18,7 @@ import {
 // query run only on explicit action. Never statically cache.
 export const dynamic = "force-dynamic";
 
-type SP = { target?: string; competitors?: string; compete?: string };
+type SP = { target?: string; competitors?: string; focus?: string; compete?: string };
 
 export default async function StrategyPage({
   searchParams,
@@ -28,6 +28,7 @@ export default async function StrategyPage({
   const sp = await searchParams;
   const target = (sp.target ?? "").trim();
   const competitors = (sp.competitors ?? "").trim();
+  const focus = (sp.focus ?? "").trim();
   const compete = sp.compete === "1";
 
   let report: SiteStrategy | null = null;
@@ -76,14 +77,25 @@ export default async function StrategyPage({
             className="rounded border border-zinc-300 px-3 py-2 text-sm"
           />
         </label>
-        <label className="flex flex-[2] flex-col gap-1">
+        <label className="flex flex-1 flex-col gap-1">
           <span className="text-xs font-medium text-zinc-600">
-            Competitors (optional, used when you run competitive)
+            Competitors (optional)
           </span>
           <input
             name="competitors"
             defaultValue={competitors}
             placeholder="competitor1.com, competitor2.com"
+            className="rounded border border-zinc-300 px-3 py-2 text-sm"
+          />
+        </label>
+        <label className="flex flex-[1.5] flex-col gap-1">
+          <span className="text-xs font-medium text-zinc-600">
+            Focus keywords (finds competitors when none given)
+          </span>
+          <input
+            name="focus"
+            defaultValue={focus}
+            placeholder="ai development company, blockchain development, smart contract"
             className="rounded border border-zinc-300 px-3 py-2 text-sm"
           />
         </label>
@@ -108,12 +120,14 @@ export default async function StrategyPage({
               <CompetitiveSnapshot
                 target={report.target}
                 competitors={competitors}
+                focus={focus}
               />
             </Suspense>
           ) : (
             <RunCompetitivePrompt
               target={report.target}
               competitors={competitors}
+              focus={focus}
             />
           )}
         </StrategyView>
@@ -133,14 +147,17 @@ export default async function StrategyPage({
 function RunCompetitivePrompt({
   target,
   competitors,
+  focus,
 }: {
   target: string;
   competitors: string;
+  focus: string;
 }) {
   return (
     <form method="GET" className="rounded-lg border border-sky-200 bg-sky-50 p-5">
       <input type="hidden" name="target" value={target} />
       <input type="hidden" name="competitors" value={competitors} />
+      <input type="hidden" name="focus" value={focus} />
       <input type="hidden" name="compete" value="1" />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -191,12 +208,18 @@ function CompetitiveSkeleton() {
 async function CompetitiveSnapshot({
   target,
   competitors,
+  focus,
 }: {
   target: string;
   competitors: string;
+  focus: string;
 }) {
   try {
-    const run = await getStrategyRun(target, competitors || undefined);
+    const run = await getStrategyRun(
+      target,
+      competitors || undefined,
+      focus || undefined,
+    );
     return (
       <div className="flex flex-col gap-6">
         <CompetitiveReportView report={run.competitive} />

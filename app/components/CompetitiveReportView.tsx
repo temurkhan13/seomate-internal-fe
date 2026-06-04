@@ -23,7 +23,9 @@ export function CompetitiveReportView({ report }: { report: CompetitiveReport })
 
   return (
     <div className="flex flex-col gap-6">
-      {report.auto_discovered && <AutoDiscoveredNote />}
+      {report.auto_discovered && (
+        <DiscoveryNote method={report.discovery_method} />
+      )}
       {report.analysis && <StrategicRead analysis={report.analysis} />}
       <VisibilitySection rows={report.visibility ?? []} />
       {report.self_audit && (
@@ -105,12 +107,22 @@ function AnalysisPending() {
   );
 }
 
-function AutoDiscoveredNote() {
+function DiscoveryNote({ method }: { method?: string }) {
+  if (method === "priority_keywords") {
+    return (
+      <div className="rounded border border-sky-300 bg-sky-50 p-3 text-xs text-sky-900">
+        Competitors were found by <strong>who ranks for your focus keywords</strong>{" "}
+        , the firms actually competing for the terms you want to win (aggregators
+        and directories filtered out). Pass an explicit competitor list to override.
+      </div>
+    );
+  }
   return (
     <div className="rounded border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
-      Competitors were auto-discovered (the platform&apos;s best-effort guess for
-      a low-footprint site). Auto-discovery is weak: pass your real business
-      competitors as a comma-separated list for a meaningful comparison.
+      Competitors were auto-discovered from homepage content , a weak guess for a
+      low-footprint site. For a meaningful comparison, add{" "}
+      <strong>focus keywords</strong> (the heads you want to win) or pass your own
+      competitor list.
     </div>
   );
 }

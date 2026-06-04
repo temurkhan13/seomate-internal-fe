@@ -13,7 +13,7 @@ import {
 // Each run is a live, paid DataForSEO query — never statically cache it.
 export const dynamic = "force-dynamic";
 
-type SP = { target?: string; competitors?: string };
+type SP = { target?: string; competitors?: string; focus?: string };
 
 export default async function CompetitivePage({
   searchParams,
@@ -23,13 +23,18 @@ export default async function CompetitivePage({
   const sp = await searchParams;
   const target = (sp.target ?? "").trim();
   const competitors = (sp.competitors ?? "").trim();
+  const focus = (sp.focus ?? "").trim();
 
   let report: CompetitiveReport | null = null;
   let error: string | null = null;
   if (target) {
     try {
       // Runs the paid query and persists it as a saved competitive analysis.
-      report = await getCompetitive(target, competitors || undefined);
+      report = await getCompetitive(
+        target,
+        competitors || undefined,
+        focus || undefined,
+      );
     } catch (e) {
       error =
         e instanceof ApiError ? `${e.status} ${e.body || e.message}` : String(e);
@@ -58,11 +63,12 @@ export default async function CompetitivePage({
         </h1>
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-zinc-600">
           Compare a site against competitors across visibility, keyword gaps, and
-          positioning. Leave competitors blank and the platform finds them itself:
-          the domains that recur in search results for the keywords this site
-          already ranks for, with aggregators and directories filtered out. Or
-          enter your own comma-separated list. Each run is a live, paid DataForSEO
-          query and is saved so you can revisit it for free.
+          positioning. Best results: name your <strong>focus keywords</strong>{" "}
+          (the heads you want to win, e.g. AI and blockchain) and the platform
+          finds competitors by who actually ranks for them , the right method for
+          a low-footprint site. Or pass your own competitor list. Leave both blank
+          and it falls back to a weaker homepage-based guess. Each run is a live,
+          paid DataForSEO query, saved so you can revisit it for free.
         </p>
       </div>
 
@@ -80,14 +86,25 @@ export default async function CompetitivePage({
             className="rounded border border-zinc-300 px-3 py-2 text-sm"
           />
         </label>
-        <label className="flex flex-[2] flex-col gap-1">
+        <label className="flex flex-1 flex-col gap-1">
           <span className="text-xs font-medium text-zinc-600">
-            Competitors (comma-separated, optional)
+            Competitors (optional)
           </span>
           <input
             name="competitors"
             defaultValue={competitors}
             placeholder="competitor1.com, competitor2.com"
+            className="rounded border border-zinc-300 px-3 py-2 text-sm"
+          />
+        </label>
+        <label className="flex flex-[1.5] flex-col gap-1">
+          <span className="text-xs font-medium text-zinc-600">
+            Focus keywords (recommended if no competitors)
+          </span>
+          <input
+            name="focus"
+            defaultValue={focus}
+            placeholder="ai development company, blockchain development, smart contract"
             className="rounded border border-zinc-300 px-3 py-2 text-sm"
           />
         </label>
