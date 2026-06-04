@@ -274,6 +274,41 @@ export type SiteStrategy = {
   diff: AuditDiff | null;
 };
 
+// ─── Projects (the top-level workspace) , matches seomate_api projects route ──
+
+export type ProjectPillar = {
+  pillar: string;
+  label: string;
+  health_pct: number | null;
+};
+
+export type ProjectAuditSummary = {
+  audit_id: string;
+  status: AuditStatus;
+  completed_at: string | null;
+  started_at: string | null;
+  overall_pct: number | null;
+  variables_attempted: number;
+  pillars: ProjectPillar[];
+};
+
+export type ProjectAnalysisRef = {
+  analysis_id: string;
+  created_at: string | null;
+};
+
+export type Project = {
+  domain: string;
+  name: string;
+  latest_audit: ProjectAuditSummary | null;
+  audit_count: number;
+  latest_competitive: ProjectAnalysisRef | null;
+  competitive_count: number;
+  latest_strategy: ProjectAnalysisRef | null;
+  strategy_count: number;
+  last_activity: string | null;
+};
+
 // ─── Competitive intelligence (the COMPETE layer) , matches seomate.competitive ──
 
 export type RankedKeyword = {
@@ -546,6 +581,11 @@ export async function getAuditPlan(auditId: string): Promise<FixPlan> {
 
 export async function getAuditStrategy(auditId: string): Promise<AuditStrategy> {
   return api<AuditStrategy>(`/api/audits/${auditId}/strategy`);
+}
+
+// Every project (site) the platform has worked on, newest activity first.
+export async function getProjects(): Promise<Project[]> {
+  return api<Project[]>(`/api/projects`);
 }
 
 export async function getCompetitive(
