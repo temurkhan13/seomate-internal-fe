@@ -160,7 +160,11 @@ async function OverviewTab({ project }: { project: Project }) {
           </Link>
         </div>
         <p className="mt-3 text-sm leading-relaxed text-indigo-950">
-          {headline ?? "No competitive analysis run yet , run one to get the read."}
+          {headline
+            ? headline
+            : project.latest_competitive
+              ? "The latest competitive run has the full data, but no strategist read is attached to it yet. Open the Competitive tab for the numbers."
+              : "No competitive analysis run yet , run one to get the read."}
         </p>
       </section>
 
