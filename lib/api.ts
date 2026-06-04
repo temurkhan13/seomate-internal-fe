@@ -308,22 +308,15 @@ export type CompetitorComparison = {
   top_losing_keywords: LosingKeyword[];
 };
 
-export type KeywordOpportunity = {
-  keyword: string;
-  volume: number;
-  difficulty: number | null;
-  opportunity_score: number;
-};
-
 export type CompetitiveReport = {
   target: string;
   competitors: string[];
   auto_discovered: boolean;
+  discovery_method?: string;
   location_code: number;
   language_code: string;
   visibility: DomainVisibility[];
   per_competitor: CompetitorComparison[];
-  opportunities: KeywordOpportunity[];
   analysis_id?: string;
 };
 

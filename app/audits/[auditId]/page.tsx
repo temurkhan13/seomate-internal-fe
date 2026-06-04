@@ -163,7 +163,7 @@ export default async function AuditDetailPage({
       </Link>
 
       {/* Strategy CTA — the domain-driven strategy surface (positioning + waves
-          + live competitive standing + keyword opportunities) */}
+          + live competitive standing + per-competitor keyword gaps) */}
       <Link
         href={`/strategy?target=${encodeURIComponent(audit.site_domain)}`}
         className="flex items-center justify-between rounded-lg border border-sky-200 bg-sky-50 p-5 hover:border-sky-300 hover:bg-sky-100"

@@ -171,9 +171,9 @@ function CompetitiveSkeleton() {
       <div className="border-b border-zinc-100 p-5">
         <h2 className="text-sm font-medium text-zinc-800">Competitive analysis</h2>
         <p className="mt-1 text-xs text-zinc-500">
-          Running a live DataForSEO query , finding competitors, visibility, and
-          keyword opportunities, then saving the snapshot. This takes 30 to 60
-          seconds.
+          Running a live DataForSEO query , finding competitors, the visibility
+          gap, and per-competitor keyword gaps, then saving the snapshot. This
+          takes 30 to 60 seconds.
         </p>
       </div>
       <div className="space-y-2 p-5">
