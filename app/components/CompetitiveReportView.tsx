@@ -134,7 +134,7 @@ function VisibilitySection({ rows }: { rows: DomainVisibility[] }) {
               <th className="p-3 font-medium">Domain</th>
               <th className="p-3 font-medium">Organic keywords</th>
               <th className="p-3 font-medium">Est. traffic</th>
-              <th className="p-3 font-medium">Backlink DR</th>
+              <th className="p-3 font-medium">Authority</th>
               <th className="p-3 font-medium">Ref. domains</th>
               <th className="p-3 font-medium">Entity</th>
             </tr>
@@ -192,13 +192,25 @@ function SelfGapSection({ self, target }: { self: SelfAudit; target: string }) {
       <div className="grid grid-cols-2 gap-px bg-zinc-100 sm:grid-cols-4">
         <Stat label="Keywords ranked" value={fmt(self.total_ranked)} />
         <Stat
-          label="Money keywords"
+          label="On Google page 1"
+          value={fmt(self.page1_keywords)}
+          tone={self.page1_keywords === 0 ? "bad" : "good"}
+        />
+        <Stat
+          label="Money keywords (page 1)"
           value={fmt(self.money_keywords_owned)}
           tone={self.money_keywords_owned === 0 ? "bad" : "good"}
         />
-        <Stat label="Branded" value={fmt(self.branded)} />
         <Stat label="Informational" value={fmt(self.informational)} />
       </div>
+      {self.page1_keywords === 0 && self.total_ranked > 0 && (
+        <div className="border-t border-zinc-100 bg-rose-50 px-5 py-3 text-xs text-rose-900">
+          You rank on page 1 of Google for <strong>nothing</strong>. All{" "}
+          {fmt(self.total_ranked)} keywords you rank for sit on page 2 or deeper,
+          where they earn almost no clicks , which is why your estimated traffic
+          is near zero despite having a live, indexed site.
+        </div>
+      )}
 
       {self.off_profile_keywords.length > 0 && (
         <div className="border-t border-zinc-100 p-5">
@@ -470,7 +482,7 @@ function ProfileCard({ p }: { p: CompetitorProfile }) {
           ) : (
             <>
               <div className="mt-1 text-xs text-zinc-600">
-                DR <span className="font-mono text-zinc-800">{bl.rank ?? "-"}</span> ·{" "}
+                Authority <span className="font-mono text-zinc-800">{bl.rank ?? "-"}</span> ·{" "}
                 <span className="font-mono text-zinc-800">{fmt(bl.referring_domains)}</span> ref domains ·{" "}
                 <span className="font-mono text-zinc-800">{fmt(bl.backlinks)}</span> links
                 {bl.spam_score != null && (
@@ -491,7 +503,7 @@ function ProfileCard({ p }: { p: CompetitorProfile }) {
                   {bl.top_referring_domains.slice(0, 4).map((d) => (
                     <li key={d.domain} className="flex justify-between gap-2 text-[11px]">
                       <span className="truncate font-mono text-zinc-600">{d.domain}</span>
-                      <span className="shrink-0 font-mono text-zinc-400">DR {d.rank ?? "-"}</span>
+                      <span className="shrink-0 font-mono text-zinc-400">auth {d.rank ?? "-"}</span>
                     </li>
                   ))}
                 </ul>

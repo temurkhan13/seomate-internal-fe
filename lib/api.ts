@@ -397,6 +397,7 @@ export type SelfAuditRow = {
 export type SelfAudit = {
   total_ranked: number;
   money_keywords_owned: number;
+  page1_keywords: number;
   branded: number;
   informational: number;
   ranked_keywords: SelfAuditRow[];
