@@ -274,7 +274,74 @@ export type SiteStrategy = {
   diff: AuditDiff | null;
 };
 
-// ─── Competitive analysis (the COMPETE layer) , matches seomate.competitive ──
+// ─── Competitive intelligence (the COMPETE layer) , matches seomate.competitive ──
+
+export type RankedKeyword = {
+  keyword: string;
+  volume: number;
+  cpc: number;
+  difficulty: number | null;
+  intent: string | null;
+  position: number | null;
+  url?: string | null;
+};
+
+export type PositionBuckets = {
+  top3: number;
+  pos_4_10: number;
+  pos_11_20: number;
+  pos_21_plus: number;
+};
+
+export type KeywordProfile = {
+  total: number;
+  branded: number;
+  commercial: number;
+  informational: number;
+  position_buckets: PositionBuckets;
+  top_commercial_keywords: RankedKeyword[];
+};
+
+export type BacklinkProfile = {
+  rank: number | null;
+  backlinks: number;
+  referring_domains: number;
+  referring_main_domains: number;
+  dofollow: number;
+  dofollow_ratio: number | null;
+  broken: number;
+  spam_score: number | null;
+  top_referring_domains: { domain: string; rank: number | null; backlinks: number | null }[];
+  top_anchors: { anchor: string; backlinks: number | null; referring_domains: number | null }[];
+};
+
+export type GeoSignal = {
+  entity_recognized: boolean;
+  entity_name: string | null;
+  entity_types: string[];
+  entity_description: string | null;
+  entity_score: number | null;
+  has_structured_data: boolean;
+};
+
+export type TopPage = { url: string; keywords: number; volume: number };
+
+export type CompetitorProfile = {
+  domain: string;
+  is_target: boolean;
+  traffic: {
+    organic_keywords: number;
+    organic_traffic: number;
+    paid_keywords: number;
+    paid_traffic: number;
+    domain_rank: number | null;
+  };
+  position_distribution: PositionBuckets;
+  keyword_profile: KeywordProfile;
+  backlinks: BacklinkProfile | null;
+  geo: GeoSignal;
+  site: { offerings: string[]; top_pages: TopPage[] };
+};
 
 export type DomainVisibility = {
   domain: string;
@@ -282,11 +349,18 @@ export type DomainVisibility = {
   organic_keywords: number;
   organic_traffic: number;
   domain_rank: number | null;
+  backlink_rank: number | null;
+  referring_domains: number | null;
+  entity_recognized: boolean;
 };
 
-export type KeywordGap = {
+// A clean competitor gap , a commercial, page-1/2 keyword they win and you don't.
+export type MoneyGap = {
   keyword: string;
   volume: number;
+  cpc: number;
+  difficulty: number | null;
+  intent: string | null;
   their_position: number | null;
   their_url: string | null;
 };
@@ -300,12 +374,44 @@ export type LosingKeyword = {
 
 export type CompetitorComparison = {
   domain: string;
-  gap_count: number;
+  gap_count_raw: number;
+  gap_count_clean: number;
   shared_count: number;
   we_win_shared: number;
   they_win_shared: number;
-  top_keyword_gaps: KeywordGap[];
+  money_gaps: MoneyGap[];
   top_losing_keywords: LosingKeyword[];
+};
+
+export type SelfAuditRow = {
+  keyword: string;
+  volume: number;
+  position: number | null;
+  intent: string | null;
+  cpc: number;
+  branded: boolean;
+  commercial: boolean;
+};
+
+// The self-gap , what the target actually ranks for vs what it should.
+export type SelfAudit = {
+  total_ranked: number;
+  money_keywords_owned: number;
+  branded: number;
+  informational: number;
+  ranked_keywords: SelfAuditRow[];
+  off_profile_keywords: SelfAuditRow[];
+  missing_money_keywords: MoneyGap[];
+};
+
+// Session-authored strategic read, attached to a saved run. Null until a Claude
+// session reviews the deterministic data and writes the judgment.
+export type CompetitiveAnalysis = {
+  headline: string;
+  competitor_take?: { domain: string; take: string }[];
+  the_gaps?: string[];
+  recommendations?: string[];
+  self_gap?: string;
 };
 
 export type CompetitiveReport = {
@@ -315,8 +421,11 @@ export type CompetitiveReport = {
   discovery_method?: string;
   location_code: number;
   language_code: string;
+  profiles: CompetitorProfile[];
   visibility: DomainVisibility[];
   per_competitor: CompetitorComparison[];
+  self_audit: SelfAudit | null;
+  analysis: CompetitiveAnalysis | null;
   analysis_id?: string;
 };
 
