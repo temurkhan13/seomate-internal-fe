@@ -309,6 +309,26 @@ export type Project = {
   last_activity: string | null;
 };
 
+export type AuditTrendPoint = {
+  audit_id: string;
+  at: string;
+  overall_pct: number | null;
+  pillars: Record<string, number | null>;
+};
+
+export type CompetitiveTrendPoint = {
+  at: string;
+  organic_keywords: number | null;
+  organic_traffic: number | null;
+};
+
+export type ProjectTrend = {
+  domain: string;
+  pillar_labels: Record<string, string>;
+  audit_trend: AuditTrendPoint[];
+  competitive_trend: CompetitiveTrendPoint[];
+};
+
 // ─── Competitive intelligence (the COMPETE layer) , matches seomate.competitive ──
 
 export type RankedKeyword = {
@@ -586,6 +606,11 @@ export async function getAuditStrategy(auditId: string): Promise<AuditStrategy> 
 // Every project (site) the platform has worked on, newest activity first.
 export async function getProjects(): Promise<Project[]> {
   return api<Project[]>(`/api/projects`);
+}
+
+// Improvement-over-time for one project (audit health + competitive footprint).
+export async function getProjectTrend(domain: string): Promise<ProjectTrend> {
+  return api<ProjectTrend>(`/api/projects/${encodeURIComponent(domain)}/trend`);
 }
 
 export async function getCompetitive(

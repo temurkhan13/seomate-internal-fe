@@ -6,9 +6,11 @@ import { PillarBars, scoreTone } from "@/app/components/PillarBars";
 import { Positioning } from "@/app/components/Positioning";
 import { SavedRunsList } from "@/app/components/SavedRunsList";
 import { StrategyView } from "@/app/components/StrategyView";
+import { bandColor, TrendChart } from "@/app/components/TrendChart";
 import {
   getAuditStrategy,
   getProjects,
+  getProjectTrend,
   getSavedAnalyses,
   getSavedAnalysis,
   getSiteStrategy,
@@ -25,6 +27,7 @@ const TABS = [
   { key: "audit", label: "Audit" },
   { key: "strategy", label: "Strategy" },
   { key: "competitive", label: "Competitive" },
+  { key: "trends", label: "Trends" },
 ];
 
 export default async function ProjectPage({
@@ -49,6 +52,7 @@ export default async function ProjectPage({
       {tab === "audit" && <AuditTab project={project} />}
       {tab === "strategy" && <StrategyTab domain={dom} />}
       {tab === "competitive" && <CompetitiveTab project={project} />}
+      {tab === "trends" && <TrendsTab domain={dom} />}
     </div>
   );
 }
@@ -316,6 +320,123 @@ async function CompetitiveTab({ project }: { project: Project }) {
       )}
       {history.length > 1 && (
         <SavedRunsList kind="competitive" items={history} title="Past competitive runs" />
+      )}
+    </div>
+  );
+}
+
+// ─── Trends (improvement over time) ─────────────────────────────────────────
+async function TrendsTab({ domain }: { domain: string }) {
+  let trend = null;
+  try {
+    trend = await getProjectTrend(domain);
+  } catch {
+    trend = null;
+  }
+  if (!trend || trend.audit_trend.length === 0) {
+    return (
+      <Empty msg="No audit history yet. The trajectory appears once there is more than one audit to compare." />
+    );
+  }
+  const at = trend.audit_trend;
+  const overall = at.map((p) => ({ label: p.at, value: p.overall_pct }));
+  const first = at[0].overall_pct;
+  const last = at[at.length - 1].overall_pct;
+  const delta = first != null && last != null ? last - first : null;
+  const pillars = Object.keys(trend.pillar_labels).sort();
+  const ct = trend.competitive_trend;
+
+  return (
+    <div className="flex flex-col gap-6">
+      <section className="rounded-lg border border-zinc-200 bg-white p-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="text-sm font-medium text-zinc-800">Audit health over time</h2>
+            <p className="mt-0.5 text-xs text-zinc-500">
+              {at.length} {at.length === 1 ? "audit" : "audits"} from {at[0].at} to{" "}
+              {at[at.length - 1].at}. One point per day.
+            </p>
+          </div>
+          {delta != null && (
+            <span
+              className={`rounded px-2 py-1 text-xs font-medium ${
+                delta > 0
+                  ? "bg-emerald-50 text-emerald-800"
+                  : delta < 0
+                    ? "bg-rose-50 text-rose-800"
+                    : "bg-zinc-100 text-zinc-600"
+              }`}
+            >
+              {delta > 0 ? "+" : ""}
+              {delta}% overall since first audit
+            </span>
+          )}
+        </div>
+        <div className="mt-3">
+          <TrendChart points={overall} domainMax={100} unit="%" vbHeight={90} color="#6366f1" />
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-zinc-200 bg-white p-5">
+        <h2 className="text-sm font-medium text-zinc-800">Pillar trajectories</h2>
+        <p className="mt-0.5 text-xs text-zinc-500">
+          Each pillar&apos;s health across the same audits. Line colour reflects the
+          latest band.
+        </p>
+        <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
+          {pillars.map((p) => {
+            const series = at.map((a) => ({ label: a.at, value: a.pillars[p] ?? null }));
+            const latest = [...series].reverse().find((s) => s.value != null)?.value ?? null;
+            return (
+              <div key={p}>
+                <div className="flex items-baseline justify-between text-xs">
+                  <span>
+                    <span className="font-mono text-zinc-400">{p}</span>{" "}
+                    <span className="text-zinc-700">{trend.pillar_labels[p]}</span>
+                  </span>
+                  <span className={scoreTone(latest)}>
+                    {latest == null ? "-" : `${latest}%`}
+                  </span>
+                </div>
+                <TrendChart
+                  points={series}
+                  domainMax={100}
+                  unit="%"
+                  vbHeight={48}
+                  color={bandColor(latest)}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {ct.length > 0 && (
+        <section className="rounded-lg border border-zinc-200 bg-white p-5">
+          <h2 className="text-sm font-medium text-zinc-800">Search footprint over time</h2>
+          <p className="mt-0.5 text-xs text-zinc-500">
+            The site&apos;s own organic visibility across competitive runs (one point
+            per day).
+          </p>
+          <div className="mt-3 grid gap-6 sm:grid-cols-2">
+            <div>
+              <div className="text-xs text-zinc-500">Organic keywords</div>
+              <TrendChart
+                points={ct.map((c) => ({ label: c.at, value: c.organic_keywords }))}
+                vbHeight={70}
+                color="#0ea5e9"
+              />
+            </div>
+            <div>
+              <div className="text-xs text-zinc-500">Est. monthly traffic</div>
+              <TrendChart
+                points={ct.map((c) => ({ label: c.at, value: c.organic_traffic }))}
+                vbHeight={70}
+                color="#0ea5e9"
+              />
+            </div>
+          </div>
+        </section>
       )}
     </div>
   );
