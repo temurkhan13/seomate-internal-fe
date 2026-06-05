@@ -10,7 +10,7 @@ import {
   type SavedAnalysisSummary,
 } from "@/lib/api";
 
-// Each run is a live, paid DataForSEO query — never statically cache it.
+// Each run is a live, paid DataForSEO query; never statically cache it.
 export const dynamic = "force-dynamic";
 
 type SP = { target?: string; competitors?: string; focus?: string };
@@ -65,8 +65,8 @@ export default async function CompetitivePage({
           Compare a site against competitors across visibility, keyword gaps, and
           positioning. Best results: name your <strong>focus keywords</strong>{" "}
           (the heads you want to win, e.g. AI and blockchain) and the platform
-          finds competitors by who actually ranks for them , the right method for
-          a low-footprint site. Or pass your own competitor list. Leave both blank
+          finds competitors by who actually ranks for them (the right method for
+          a low-footprint site). Or pass your own competitor list. Leave both blank
           and it falls back to a weaker homepage-based guess. Each run is a live,
           paid DataForSEO query, saved so you can revisit it for free.
         </p>
@@ -80,6 +80,12 @@ export default async function CompetitivePage({
           <span className="text-xs font-medium text-zinc-600">Your domain</span>
           <input
             name="target"
+            type="text"
+            inputMode="url"
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             defaultValue={target}
             placeholder="example.com"
             required
@@ -92,6 +98,11 @@ export default async function CompetitivePage({
           </span>
           <input
             name="competitors"
+            type="text"
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             defaultValue={competitors}
             placeholder="competitor1.com, competitor2.com"
             className="rounded border border-zinc-300 px-3 py-2 text-sm"
@@ -103,6 +114,11 @@ export default async function CompetitivePage({
           </span>
           <input
             name="focus"
+            type="text"
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             defaultValue={focus}
             placeholder="ai development company, blockchain development, smart contract"
             className="rounded border border-zinc-300 px-3 py-2 text-sm"
@@ -118,7 +134,7 @@ export default async function CompetitivePage({
 
       {error && (
         <div className="rounded border border-rose-300 bg-rose-50 p-4 text-sm text-rose-900">
-          Analysis failed , {error}
+          Analysis failed: {error}
         </div>
       )}
 

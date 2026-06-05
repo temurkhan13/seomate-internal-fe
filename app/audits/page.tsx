@@ -52,8 +52,7 @@ export default async function AuditsPage() {
           No audits yet. A Claude session runs{" "}
           <code className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs">
             seomate gather --domain &lt;site&gt;
-          </code>
-          , evaluates each variable, then{" "}
+          </code>, evaluates each variable, then{" "}
           <code className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs">
             seomate ingest
           </code>{" "}

@@ -2,7 +2,7 @@
  * Typed client for the SEOMATE FastAPI service.
  *
  * Server Components fetch directly from this module. We avoid TanStack
- * Query and openapi-typescript at this stage — hand-written types match
+ * Query and openapi-typescript at this stage; hand-written types match
  * `api/seomate_api/schemas/` exactly and the surface is small enough to
  * audit by eye. Types here are the contract; if the API evolves, both
  * sides change in the same PR.
@@ -513,7 +513,7 @@ export type SavedAnalysisDetail = SavedAnalysisSummary & {
 /**
  * Fetch JSON from the SEOMATE API.
  *
- * `cache: "no-store"` keeps every page render fresh against the live DB —
+ * `cache: "no-store"` keeps every page render fresh against the live DB:
  * this is dogfood scale, not a CDN-served public site, so we always want
  * the latest captures. Switch to revalidate-based caching when the audit
  * surface stops changing minute-to-minute.

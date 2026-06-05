@@ -28,12 +28,32 @@ export function PillarBars({
   height?: string;
   withLabels?: boolean;
 }) {
+  const summary = pillars
+    .map(
+      (p) =>
+        `${p.pillar} ${p.label} ${
+          p.health_pct == null ? "not measured" : `${p.health_pct}%`
+        }`,
+    )
+    .join(", ");
   return (
-    <div className="flex items-end gap-1.5">
+    <div
+      className="flex items-end gap-1.5"
+      role="img"
+      aria-label={`Pillar health: ${summary}`}
+    >
       {pillars.map((p) => (
-        <div key={p.pillar} className="flex flex-1 flex-col items-center gap-1">
+        <div
+          key={p.pillar}
+          aria-hidden="true"
+          className="flex flex-1 flex-col items-center gap-1"
+        >
           {withLabels && (
-            <div className={`text-[10px] font-medium ${scoreTone(p.health_pct)}`}>
+            <div
+              className={`text-[10px] font-medium tabular-nums ${scoreTone(
+                p.health_pct,
+              )}`}
+            >
               {p.health_pct == null ? "-" : `${p.health_pct}%`}
             </div>
           )}

@@ -10,7 +10,7 @@ export function HowItWorks() {
       <summary className="cursor-pointer select-none font-medium text-indigo-900 marker:text-indigo-400">
         How to run an audit (for a Claude session)
         <span className="ml-2 font-normal text-indigo-500 group-open:hidden">
-          , click to expand
+          (click to expand)
         </span>
       </summary>
 
@@ -18,7 +18,7 @@ export function HowItWorks() {
         <p>
           SEOMATE is the diagnostic infrastructure: it supplies the taxonomy, the
           data plumbing, the storage, and this dashboard. A Claude session is the
-          auditor , it gathers data, applies judgment per variable, and writes the
+          auditor: it gathers data, applies judgment per variable, and writes the
           result back here. To audit a new site:
         </p>
 
@@ -28,16 +28,16 @@ export function HowItWorks() {
             <span className="font-medium">Get the brief.</span>{" "}
             <code className="rounded bg-white px-1.5 py-0.5 font-mono text-xs text-indigo-900">
               seomate export-brief --out brief.json
-            </code>{" "}
-            , all 232 variables, their rules, and which data source answers each.
+            </code>:{" "}
+            all 232 variables, their rules, and which data source answers each.
           </li>
           <li>
             <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs font-semibold text-white">2</span>
             <span className="font-medium">Gather every reachable source.</span>{" "}
             <code className="rounded bg-white px-1.5 py-0.5 font-mono text-xs text-indigo-900">
               seomate gather --domain abcd.com --out audit-cache
-            </code>{" "}
-            , crawl + link graph, robots, PageSpeed, CrUX, Wayback, Knowledge
+            </code>:{" "}
+            crawl + link graph, robots, PageSpeed, CrUX, Wayback, Knowledge
             Graph, DataForSEO SERP/Labs/Business/LLM-citations, Search Console.
             Auto-derives keywords + market. Read{" "}
             <code className="rounded bg-white px-1 py-0.5 font-mono text-xs">
@@ -51,21 +51,21 @@ export function HowItWorks() {
             This is the only part needing judgment. Apply each variable&apos;s
             rules against the gathered data. For any source the manifest marks
             unavailable, the dependent variables are{" "}
-            <span className="font-medium">unmeasurable</span> , never guessed.
+            <span className="font-medium">unmeasurable</span>, never guessed.
           </li>
           <li>
             <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs font-semibold text-white">4</span>
             <span className="font-medium">Write it back.</span>{" "}
             <code className="rounded bg-white px-1.5 py-0.5 font-mono text-xs text-indigo-900">
               seomate ingest --file audit.json
-            </code>{" "}
-            , validates against the contract and lands the audit on this
+            </code>:{" "}
+            validates against the contract and lands the audit on this
             dashboard. It then appears in the list below.
           </li>
         </ol>
 
         <p className="text-xs text-zinc-500">
-          Full method (source , capability matrix):{" "}
+          Full method (source and capability matrix):{" "}
           <span className="font-mono">docs/agent-audit-runbook.md</span>. Keys a
           session needs: <span className="font-mono">docs/agent-credentials.md</span>.
           Discipline: evidence must be real and gathered this run; never fabricate

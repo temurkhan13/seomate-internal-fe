@@ -144,7 +144,7 @@ export default async function AuditDetailPage({
         </div>
       </div>
 
-      {/* Fix plan CTA — the bridge from diagnosis to remediation */}
+      {/* Fix plan CTA: the bridge from diagnosis to remediation */}
       <Link
         href={`/audits/${audit.audit_id}/plan`}
         className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 p-5 hover:border-emerald-300 hover:bg-emerald-100"
@@ -162,7 +162,7 @@ export default async function AuditDetailPage({
         </span>
       </Link>
 
-      {/* Strategy CTA — the domain-driven strategy surface (positioning + waves
+      {/* Strategy CTA: the domain-driven strategy surface (positioning + waves
           + live competitive standing + per-competitor keyword gaps) */}
       <Link
         href={`/strategy?target=${encodeURIComponent(audit.site_domain)}`}

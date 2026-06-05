@@ -10,6 +10,7 @@ import {
   type SiteStrategy,
   type StrategyRun,
 } from "@/lib/api";
+import { formatTimestamp } from "@/lib/format";
 
 // Saved snapshot is read-only from the DB , no DataForSEO call, but keep it
 // fresh against the live table rather than statically cached.
@@ -38,9 +39,7 @@ export default async function StrategyDetailPage({
     audit: bundle.audit,
     diff: bundle.diff,
   };
-  const when = saved.created_at
-    ? saved.created_at.slice(0, 16).replace("T", " ")
-    : null;
+  const when = saved.created_at ? formatTimestamp(saved.created_at) : null;
 
   return (
     <div className="flex flex-col gap-8">
@@ -52,10 +51,10 @@ export default async function StrategyDetailPage({
           ← Strategy
         </Link>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight">
-          Strategy snapshot , {saved.target}
+          Strategy snapshot: {saved.target}
         </h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Saved snapshot{when ? ` from ${when}` : ""}. Revisited for free , no new
+          Saved snapshot{when ? ` from ${when}` : ""}. Revisited for free, no new
           DataForSEO query.
         </p>
       </div>

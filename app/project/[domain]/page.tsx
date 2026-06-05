@@ -20,6 +20,7 @@ import {
   type SavedAnalysisSummary,
   type SiteStrategy,
 } from "@/lib/api";
+import { formatDate, formatTimestamp } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -143,7 +144,7 @@ async function OverviewTab({ project }: { project: Project }) {
             ? headline
             : project.latest_competitive
               ? "The latest competitive run has the full data, but no strategist read is attached to it yet. Open the Competitive tab for the numbers."
-              : "No competitive analysis run yet , run one to get the read."}
+              : "No competitive analysis run yet. Run one to get the read."}
         </p>
       </section>
 
@@ -156,7 +157,7 @@ async function OverviewTab({ project }: { project: Project }) {
         </div>
         {project.last_activity && (
           <p className="mt-3 text-xs text-zinc-400">
-            Last activity {project.last_activity.slice(0, 16).replace("T", " ")}
+            Last activity {formatTimestamp(project.last_activity)}
           </p>
         )}
       </section>
@@ -190,7 +191,7 @@ async function AuditTab({ project }: { project: Project }) {
           <div>
             <h2 className="text-sm font-medium text-zinc-800">Latest audit</h2>
             <p className="text-xs text-zinc-500">
-              {a.completed_at?.slice(0, 16).replace("T", " ")} · {a.status} ·{" "}
+              {formatTimestamp(a.completed_at)} · {a.status} ·{" "}
               {a.variables_attempted} variables
             </p>
           </div>
@@ -276,7 +277,7 @@ async function CompetitiveTab({ project }: { project: Project }) {
       <div className="flex items-center justify-between">
         <p className="text-sm text-zinc-500">
           {report
-            ? `Latest competitive analysis · ${project.latest_competitive?.created_at?.slice(0, 10)}`
+            ? `Latest competitive analysis · ${formatDate(project.latest_competitive?.created_at)}`
             : "No competitive analysis yet."}
         </p>
         <Link

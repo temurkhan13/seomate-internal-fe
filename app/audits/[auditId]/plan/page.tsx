@@ -96,7 +96,7 @@ export default async function FixPlanPage({
       {!plan.is_latest_audit && (
         <div className="rounded border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
           This is not the latest audit for {plan.site_domain}. The live site may
-          have changed — re-plan against the latest audit before shipping fixes.
+          have changed; re-plan against the latest audit before shipping fixes.
         </div>
       )}
 

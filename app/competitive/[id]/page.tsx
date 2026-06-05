@@ -8,6 +8,7 @@ import {
   type CompetitiveReport,
   type SavedAnalysisDetail,
 } from "@/lib/api";
+import { formatTimestamp } from "@/lib/format";
 
 // Saved detail is read-only from the DB , no DataForSEO call, but keep it fresh
 // against the live table rather than statically cached.
@@ -30,9 +31,7 @@ export default async function CompetitiveDetailPage({
   if (saved.kind !== "competitive") notFound();
 
   const report = saved.payload as CompetitiveReport;
-  const when = saved.created_at
-    ? saved.created_at.slice(0, 16).replace("T", " ")
-    : null;
+  const when = saved.created_at ? formatTimestamp(saved.created_at) : null;
 
   return (
     <div className="flex flex-col gap-8">
@@ -44,10 +43,10 @@ export default async function CompetitiveDetailPage({
           ← Competitive
         </Link>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight">
-          Competitive analysis , {saved.target}
+          Competitive analysis: {saved.target}
         </h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Saved run{when ? ` from ${when}` : ""}. Revisited for free , no new
+          Saved run{when ? ` from ${when}` : ""}. Revisited for free, no new
           DataForSEO query.
         </p>
       </div>

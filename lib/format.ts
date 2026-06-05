@@ -2,8 +2,8 @@
  * Small presentation helpers shared across pages.
  */
 
-export function formatTimestamp(iso: string | null): string {
-  if (!iso) return "—";
+export function formatTimestamp(iso: string | null | undefined): string {
+  if (!iso) return "n/a";
   const d = new Date(iso);
   return d.toLocaleString("en-GB", {
     year: "numeric",
@@ -17,10 +17,24 @@ export function formatTimestamp(iso: string | null): string {
   }) + " UTC";
 }
 
+/**
+ * Date only, no clock. Fixed locale + UTC so the server and client render the
+ * exact same string (no hydration mismatch). e.g. "04 Jun 2026".
+ */
+export function formatDate(iso: string | null | undefined): string {
+  if (!iso) return "n/a";
+  return new Date(iso).toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    timeZone: "UTC",
+  });
+}
+
 export function formatGbp(value: string | number | null): string {
-  if (value === null || value === undefined) return "—";
+  if (value === null || value === undefined) return "n/a";
   const n = typeof value === "string" ? parseFloat(value) : value;
-  if (Number.isNaN(n)) return "—";
+  if (Number.isNaN(n)) return "n/a";
   return new Intl.NumberFormat("en-GB", {
     style: "currency",
     currency: "GBP",
@@ -30,7 +44,7 @@ export function formatGbp(value: string | number | null): string {
 }
 
 export function formatDuration(startIso: string, endIso: string | null): string {
-  if (!endIso) return "—";
+  if (!endIso) return "n/a";
   const ms = new Date(endIso).getTime() - new Date(startIso).getTime();
   // Defense in depth: a negative duration (clock skew / inverted timestamps)
   // should never render as "-128 ms". Show a floor instead.

@@ -106,7 +106,7 @@ function AnalysisPending() {
   return (
     <div className="rounded border border-dashed border-zinc-300 bg-zinc-50 p-4 text-xs text-zinc-500">
       Strategist read pending. The numbers above are the platform&apos;s; a
-      strategist session reviews them and writes the &quot;so what&quot; , what
+      strategist session reviews them and writes the &quot;so what&quot;: what
       each competitor is doing, which gaps to close first, and how to fix the
       keywords you rank for.
     </div>
@@ -117,15 +117,16 @@ function DiscoveryNote({ method }: { method?: string }) {
   if (method === "priority_keywords") {
     return (
       <div className="rounded border border-sky-300 bg-sky-50 p-3 text-xs text-sky-900">
-        Competitors were found by <strong>who ranks for your focus keywords</strong>{" "}
-        , the firms actually competing for the terms you want to win (aggregators
-        and directories filtered out). Pass an explicit competitor list to override.
+        Competitors were found by{" "}
+        <strong>who ranks for your focus keywords</strong>: the firms actually
+        competing for the terms you want to win (aggregators and directories
+        filtered out). Pass an explicit competitor list to override.
       </div>
     );
   }
   return (
     <div className="rounded border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
-      Competitors were auto-discovered from homepage content , a weak guess for a
+      Competitors were auto-discovered from homepage content: a weak guess for a
       low-footprint site. For a meaningful comparison, add{" "}
       <strong>focus keywords</strong> (the heads you want to win) or pass your own
       competitor list.
@@ -200,7 +201,7 @@ function SelfGapSection({ self, target }: { self: SelfAudit; target: string }) {
     <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
       <div className="border-b border-zinc-100 p-5">
         <h2 className="text-sm font-medium text-zinc-800">
-          Your keyword reality , {target}
+          Your keyword reality: {target}
         </h2>
         <p className="mt-1 text-xs text-zinc-500">
           What you actually rank for, and the buyer-intent keywords you are
@@ -225,7 +226,7 @@ function SelfGapSection({ self, target }: { self: SelfAudit; target: string }) {
         <div className="border-t border-zinc-100 bg-rose-50 px-5 py-3 text-xs text-rose-900">
           You rank on page 1 of Google for <strong>nothing</strong>. All{" "}
           {fmt(self.total_ranked)} keywords you rank for sit on page 2 or deeper,
-          where they earn almost no clicks , which is why your estimated traffic
+          where they earn almost no clicks, which is why your estimated traffic
           is near zero despite having a live, indexed site.
         </div>
       )}
@@ -233,7 +234,7 @@ function SelfGapSection({ self, target }: { self: SelfAudit; target: string }) {
       {self.ranked_keywords.length > 0 && (
         <details className="border-t border-zinc-100 px-5 py-3">
           <summary className="cursor-pointer text-xs font-medium text-zinc-600 hover:text-zinc-900">
-            What you actually rank for , every keyword and where it sits ({fmt(self.total_ranked)})
+            What you actually rank for: every keyword and where it sits ({fmt(self.total_ranked)})
           </summary>
           <ul className="mt-3 space-y-1">
             {self.ranked_keywords.map((r) => (
@@ -267,7 +268,7 @@ function SelfGapSection({ self, target }: { self: SelfAudit; target: string }) {
             Ranking for the wrong things
           </h3>
           <p className="mt-1 text-xs text-zinc-500">
-            Brand-adjacent keywords with no buyer intent , you own them, but they
+            Brand-adjacent keywords with no buyer intent: you own them, but they
             sell nothing and can crowd out the brand you want to be known for.
           </p>
           <ul className="mt-2 space-y-1">
@@ -314,7 +315,7 @@ function Stat({
     tone === "bad" ? "text-rose-600" : tone === "good" ? "text-emerald-600" : "text-zinc-900";
   return (
     <div className="bg-white p-4">
-      <div className={`text-xl font-semibold ${color}`}>{value}</div>
+      <div className={`text-xl font-semibold tabular-nums ${color}`}>{value}</div>
       <div className="mt-0.5 text-[11px] text-zinc-500">{label}</div>
     </div>
   );
@@ -345,12 +346,12 @@ function CompetitorGapsSection({ rows }: { rows: CompetitorComparison[] }) {
               </h3>
               <KeywordGapList
                 gaps={c.money_gaps ?? []}
-                empty="No commercial page-1/2 keyword they win cleanly , their footprint is informational/long-tail, not money keywords."
+                empty="No commercial page-1/2 keyword they win cleanly; their footprint is informational/long-tail, not money keywords."
               />
             </div>
             <div className="p-5">
               <h3 className="text-xs font-medium uppercase tracking-wide text-zinc-500">
-                Shared , they out-rank you
+                Shared: they out-rank you
               </h3>
               {(c.top_losing_keywords ?? []).length === 0 ? (
                 <p className="mt-2 text-xs text-zinc-400">none</p>

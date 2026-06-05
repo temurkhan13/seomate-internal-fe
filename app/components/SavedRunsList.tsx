@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { SavedAnalysisSummary } from "@/lib/api";
+import { formatTimestamp } from "@/lib/format";
 
 /**
  * History list for a saved-analysis surface (competitive or strategy). Each row
@@ -22,7 +23,7 @@ export function SavedRunsList({
       <div className="border-b border-zinc-100 p-5">
         <h2 className="text-sm font-medium text-zinc-800">{title}</h2>
         <p className="mt-1 text-xs text-zinc-500">
-          Past runs, newest first. Open one to revisit it for free , no new
+          Past runs, newest first. Open one to revisit it for free, no new
           DataForSEO query.
         </p>
       </div>
@@ -37,7 +38,7 @@ export function SavedRunsList({
               <span className="flex shrink-0 items-center gap-3 text-xs text-zinc-500">
                 {it.created_at && (
                   <span className="font-mono">
-                    {it.created_at.slice(0, 16).replace("T", " ")}
+                    {formatTimestamp(it.created_at)}
                   </span>
                 )}
                 <span className="text-zinc-400">view →</span>

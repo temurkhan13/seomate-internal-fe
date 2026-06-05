@@ -56,7 +56,7 @@ export default async function StrategyPage({
         <h1 className="text-2xl font-semibold tracking-tight">Strategy</h1>
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-zinc-600">
           One view of a site: where it stands (latest audit), what moved since
-          last time, the fixes sequenced into waves, and , on demand , the
+          last time, the fixes sequenced into waves, and, on demand, the
           competitors and keywords to target. The audit view is free; running the
           competitive analysis is a paid DataForSEO query and saves the whole
           strategy as a snapshot you can revisit for free.
@@ -71,6 +71,12 @@ export default async function StrategyPage({
           <span className="text-xs font-medium text-zinc-600">Site domain</span>
           <input
             name="target"
+            type="text"
+            inputMode="url"
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             defaultValue={target}
             placeholder="example.com"
             required
@@ -83,6 +89,11 @@ export default async function StrategyPage({
           </span>
           <input
             name="competitors"
+            type="text"
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             defaultValue={competitors}
             placeholder="competitor1.com, competitor2.com"
             className="rounded border border-zinc-300 px-3 py-2 text-sm"
@@ -94,6 +105,11 @@ export default async function StrategyPage({
           </span>
           <input
             name="focus"
+            type="text"
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             defaultValue={focus}
             placeholder="ai development company, blockchain development, smart contract"
             className="rounded border border-zinc-300 px-3 py-2 text-sm"
@@ -109,7 +125,7 @@ export default async function StrategyPage({
 
       {error && (
         <div className="rounded border border-rose-300 bg-rose-50 p-4 text-sm text-rose-900">
-          Strategy failed , {error}
+          Strategy failed: {error}
         </div>
       )}
 
@@ -188,7 +204,7 @@ function CompetitiveSkeleton() {
       <div className="border-b border-zinc-100 p-5">
         <h2 className="text-sm font-medium text-zinc-800">Competitive analysis</h2>
         <p className="mt-1 text-xs text-zinc-500">
-          Running a live DataForSEO query , finding competitors, the visibility
+          Running a live DataForSEO query: finding competitors, the visibility
           gap, and per-competitor keyword gaps, then saving the snapshot. This
           takes 30 to 60 seconds.
         </p>
@@ -234,7 +250,7 @@ async function CompetitiveSnapshot({
   } catch (e) {
     return (
       <div className="rounded border border-rose-300 bg-rose-50 p-4 text-sm text-rose-900">
-        Competitive analysis failed ,{" "}
+        Competitive analysis failed:{" "}
         {e instanceof ApiError ? `${e.status} ${e.body || e.message}` : String(e)}
       </div>
     );

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { PillarBars, scoreTone } from "@/app/components/PillarBars";
 import { getProjects, type Project } from "@/lib/api";
+import { formatDate } from "@/lib/format";
 
 // Projects are derived live from stored audits + analyses , never cache.
 export const dynamic = "force-dynamic";
@@ -28,7 +29,7 @@ export default async function Home() {
 
       {error && (
         <div className="rounded border border-rose-300 bg-rose-50 p-4 text-sm text-rose-900">
-          Could not load projects , {error}
+          Could not load projects: {error}
         </div>
       )}
 
@@ -89,7 +90,7 @@ function ProjectCard({ p }: { p: Project }) {
           <span className="font-mono text-zinc-700">{p.strategy_count}</span> strategy
         </span>
         {p.last_activity && (
-          <span className="ml-auto text-zinc-400">{p.last_activity.slice(0, 10)}</span>
+          <span className="ml-auto text-zinc-400">{formatDate(p.last_activity)}</span>
         )}
       </div>
     </Link>
