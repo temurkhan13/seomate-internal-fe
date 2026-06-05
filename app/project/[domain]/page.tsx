@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 
 import { CompetitiveReportView } from "@/app/components/CompetitiveReportView";
 import { PillarBars, scoreTone } from "@/app/components/PillarBars";
+import { Positioning } from "@/app/components/Positioning";
 import { SavedRunsList } from "@/app/components/SavedRunsList";
 import { StrategyView } from "@/app/components/StrategyView";
 import {
+  getAuditStrategy,
   getProjects,
   getSavedAnalyses,
   getSavedAnalysis,
@@ -195,9 +197,15 @@ function Stat({ label, value }: { label: string; value: number }) {
 }
 
 // ─── Audit (latest) ─────────────────────────────────────────────────────────
-function AuditTab({ project }: { project: Project }) {
+async function AuditTab({ project }: { project: Project }) {
   const a = project.latest_audit;
   if (!a) return <Empty msg="No audit has been run for this site yet." />;
+  let positioning = null;
+  try {
+    positioning = (await getAuditStrategy(a.audit_id)).positioning;
+  } catch {
+    positioning = null;
+  }
   return (
     <div className="flex flex-col gap-4">
       <section className="rounded-lg border border-zinc-200 bg-white p-5">
@@ -234,6 +242,7 @@ function AuditTab({ project }: { project: Project }) {
           </Link>
         </div>
       </section>
+      {positioning && <Positioning positioning={positioning} />}
       <Link href="/audits" className="text-xs text-zinc-500 hover:text-zinc-700">
         View all {project.audit_count} audits for this and other sites →
       </Link>

@@ -42,6 +42,12 @@ export function CompetitiveReportView({ report }: { report: CompetitiveReport })
 
 const fmt = (n: number | null | undefined) => (n ?? 0).toLocaleString();
 const posLabel = (p: number | null | undefined) => (p == null ? "-" : `#${p}`);
+const posTone = (p: number | null | undefined): string => {
+  if (p == null) return "text-zinc-400";
+  if (p <= 10) return "text-emerald-600"; // page 1
+  if (p <= 20) return "text-amber-600"; // page 2
+  return "text-rose-500"; // deeper
+};
 
 // ─── strategist read (session-authored) ─────────────────────────────────────
 function StrategicRead({ analysis }: { analysis: CompetitiveAnalysis }) {
@@ -222,6 +228,37 @@ function SelfGapSection({ self, target }: { self: SelfAudit; target: string }) {
           where they earn almost no clicks , which is why your estimated traffic
           is near zero despite having a live, indexed site.
         </div>
+      )}
+
+      {self.ranked_keywords.length > 0 && (
+        <details className="border-t border-zinc-100 px-5 py-3">
+          <summary className="cursor-pointer text-xs font-medium text-zinc-600 hover:text-zinc-900">
+            What you actually rank for , every keyword and where it sits ({fmt(self.total_ranked)})
+          </summary>
+          <ul className="mt-3 space-y-1">
+            {self.ranked_keywords.map((r) => (
+              <li
+                key={r.keyword}
+                className="flex items-center justify-between gap-2 text-xs"
+              >
+                <span className="truncate text-zinc-800">
+                  {r.keyword}
+                  {r.branded && (
+                    <span className="ml-1.5 text-[10px] text-zinc-400">brand</span>
+                  )}
+                </span>
+                <span className="flex shrink-0 items-center gap-2 font-mono text-zinc-500">
+                  <span>{fmt(r.volume)}</span>
+                  {r.cpc > 0 && (
+                    <span className="text-emerald-600">${r.cpc.toFixed(2)}</span>
+                  )}
+                  <span className="text-zinc-400">{r.intent ?? "-"}</span>
+                  <span className={posTone(r.position)}>{posLabel(r.position)}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </details>
       )}
 
       {self.off_profile_keywords.length > 0 && (
