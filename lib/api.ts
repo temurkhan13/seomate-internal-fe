@@ -608,6 +608,11 @@ export async function getProjects(): Promise<Project[]> {
   return api<Project[]>(`/api/projects`);
 }
 
+// One project's summary , cheap (scoped to the domain), for the workspace header.
+export async function getProject(domain: string): Promise<Project> {
+  return api<Project>(`/api/projects/${encodeURIComponent(domain)}`);
+}
+
 // Improvement-over-time for one project (audit health + competitive footprint).
 export async function getProjectTrend(domain: string): Promise<ProjectTrend> {
   return api<ProjectTrend>(`/api/projects/${encodeURIComponent(domain)}/trend`);

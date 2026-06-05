@@ -4,12 +4,13 @@ import { notFound } from "next/navigation";
 import { CompetitiveReportView } from "@/app/components/CompetitiveReportView";
 import { PillarBars, scoreTone } from "@/app/components/PillarBars";
 import { Positioning } from "@/app/components/Positioning";
+import { ProjectTabs } from "@/app/components/ProjectTabs";
 import { SavedRunsList } from "@/app/components/SavedRunsList";
 import { StrategyView } from "@/app/components/StrategyView";
 import { bandColor, TrendChart } from "@/app/components/TrendChart";
 import {
   getAuditStrategy,
-  getProjects,
+  getProject,
   getProjectTrend,
   getSavedAnalyses,
   getSavedAnalysis,
@@ -22,14 +23,6 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const TABS = [
-  { key: "overview", label: "Overview" },
-  { key: "audit", label: "Audit" },
-  { key: "strategy", label: "Strategy" },
-  { key: "competitive", label: "Competitive" },
-  { key: "trends", label: "Trends" },
-];
-
 export default async function ProjectPage({
   params,
   searchParams,
@@ -40,14 +33,18 @@ export default async function ProjectPage({
   const dom = decodeURIComponent((await params).domain);
   const tab = (await searchParams).tab ?? "overview";
 
-  const projects = await getProjects().catch(() => [] as Project[]);
-  const project = projects.find((p) => p.domain === dom) ?? null;
+  let project: Project | null = null;
+  try {
+    project = await getProject(dom);
+  } catch {
+    project = null;
+  }
   if (!project) notFound();
 
   return (
     <div className="flex flex-col gap-6">
       <ProjectHeader project={project} />
-      <TabBar domain={dom} active={tab} />
+      <ProjectTabs domain={dom} active={tab} />
       {tab === "overview" && <OverviewTab project={project} />}
       {tab === "audit" && <AuditTab project={project} />}
       {tab === "strategy" && <StrategyTab domain={dom} />}
@@ -86,30 +83,6 @@ function ProjectHeader({ project }: { project: Project }) {
         )}
       </div>
     </div>
-  );
-}
-
-function TabBar({ domain, active }: { domain: string; active: string }) {
-  const base = `/project/${encodeURIComponent(domain)}`;
-  return (
-    <nav className="flex gap-1 border-b border-zinc-200 text-sm">
-      {TABS.map((t) => {
-        const on = active === t.key;
-        return (
-          <Link
-            key={t.key}
-            href={t.key === "overview" ? base : `${base}?tab=${t.key}`}
-            className={`-mb-px border-b-2 px-4 py-2 font-medium transition-colors ${
-              on
-                ? "border-zinc-900 text-zinc-900"
-                : "border-transparent text-zinc-500 hover:text-zinc-800"
-            }`}
-          >
-            {t.label}
-          </Link>
-        );
-      })}
-    </nav>
   );
 }
 
